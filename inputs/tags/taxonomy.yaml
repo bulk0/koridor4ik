@@ -1,0 +1,84 @@
+version: v1
+updated_at: '2025-12-18'
+tags:
+- key: age
+  title: age
+  type: enum
+  allow_multiple: false
+  enum:
+  - 18-
+  - 18-24
+  - 15-34
+  - 35-44
+  - 45-55
+  - 55+
+- key: gender
+  title: gender
+  type: enum
+  allow_multiple: false
+  enum:
+  - male
+  - female
+- key: city
+  title: city
+  type: enum
+  allow_multiple: false
+  enum:
+  - Moscow
+  - other
+- key: family
+  title: family
+  type: enum
+  allow_multiple: false
+  enum:
+  - single
+  - married
+- key: children
+  title: children
+  type: bool
+  allow_multiple: false
+- key: children_age
+  title: children_age
+  type: enum
+  allow_multiple: true
+  enum:
+  - 0-3
+  - 4-7
+  - 8-11
+  - 12-15
+  - 16-17
+- key: ai_usage
+  title: ai_usage
+  type: enum
+  allow_multiple: false
+  enum:
+  - active
+  - occasional
+  - non-user
+- key: search_usage
+  title: search_usage
+  type: enum
+  allow_multiple: true
+  enum:
+  - yandex
+  - google
+  - other
+- key: alice_usage
+  title: alice_usage
+  type: bool
+  allow_multiple: false
+- key: alice_ai_usage
+  title: alice_ai_usage
+  type: bool
+  allow_multiple: false
+- key: ai_services
+  title: ai_services
+  type: multienum
+  allow_multiple: true
+  enum:
+  - chatgpt
+  - deepseek
+  - aliceai
+  - gigachat
+  - gemini
+  - claude

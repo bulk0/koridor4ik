@@ -1,0 +1,2097 @@
+[
+  {
+    "persona_id": "p_b905c6ae9b6e",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_b905c6ae9b6e",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_b905c6ae9b6e",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_b905c6ae9b6e",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_b905c6ae9b6e",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_b905c6ae9b6e",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_b905c6ae9b6e",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_b905c6ae9b6e",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_b905c6ae9b6e",
+    "category": "ai_services",
+    "value": "deepseek"
+  },
+  {
+    "persona_id": "p_92a3a8c86e31",
+    "category": "age",
+    "value": "35-44"
+  },
+  {
+    "persona_id": "p_92a3a8c86e31",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_92a3a8c86e31",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_92a3a8c86e31",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_92a3a8c86e31",
+    "category": "children",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_92a3a8c86e31",
+    "category": "children_age",
+    "value": "8-11"
+  },
+  {
+    "persona_id": "p_92a3a8c86e31",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_92a3a8c86e31",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_92a3a8c86e31",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_92a3a8c86e31",
+    "category": "alice_ai_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_92a3a8c86e31",
+    "category": "ai_services",
+    "value": "aliceai"
+  },
+  {
+    "persona_id": "p_92a3a8c86e31",
+    "category": "ai_services",
+    "value": "gigachat"
+  },
+  {
+    "persona_id": "p_92a3a8c86e31",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "search_usage",
+    "value": "google"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "alice_ai_usage",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "ai_services",
+    "value": "deepseek"
+  },
+  {
+    "persona_id": "p_36a95431951d",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_36a95431951d",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_36a95431951d",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_36a95431951d",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_36a95431951d",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_36a95431951d",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_36a95431951d",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_36a95431951d",
+    "category": "alice_ai_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_36a95431951d",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_36a95431951d",
+    "category": "ai_services",
+    "value": "aliceai"
+  },
+  {
+    "persona_id": "p_976c8bb57498",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_976c8bb57498",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_976c8bb57498",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_976c8bb57498",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_976c8bb57498",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_976c8bb57498",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_976c8bb57498",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_976c8bb57498",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_976c8bb57498",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_976c8bb57498",
+    "category": "ai_services",
+    "value": "deepseek"
+  },
+  {
+    "persona_id": "p_d8c151c1bc10",
+    "category": "age",
+    "value": "35-44"
+  },
+  {
+    "persona_id": "p_d8c151c1bc10",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_d8c151c1bc10",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_d8c151c1bc10",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_d8c151c1bc10",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_d8c151c1bc10",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_d8c151c1bc10",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_d8c151c1bc10",
+    "category": "ai_services",
+    "value": "deepseek"
+  },
+  {
+    "persona_id": "p_e87e4e496f97",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_e87e4e496f97",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_e87e4e496f97",
+    "category": "city",
+    "value": "Moscow"
+  },
+  {
+    "persona_id": "p_e87e4e496f97",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_e87e4e496f97",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_e87e4e496f97",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_e87e4e496f97",
+    "category": "search_usage",
+    "value": "google"
+  },
+  {
+    "persona_id": "p_e87e4e496f97",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_e87e4e496f97",
+    "category": "alice_ai_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_e87e4e496f97",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_e87e4e496f97",
+    "category": "ai_services",
+    "value": "aliceai"
+  },
+  {
+    "persona_id": "p_e87e4e496f97",
+    "category": "ai_services",
+    "value": "gigachat"
+  },
+  {
+    "persona_id": "p_6a795719920a",
+    "category": "age",
+    "value": "35-44"
+  },
+  {
+    "persona_id": "p_6a795719920a",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_6a795719920a",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_6a795719920a",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_6a795719920a",
+    "category": "children",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_6a795719920a",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_6a795719920a",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_6a795719920a",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_6a795719920a",
+    "category": "ai_services",
+    "value": "deepseek"
+  },
+  {
+    "persona_id": "p_0e1465f97a10",
+    "category": "age",
+    "value": "15-34"
+  },
+  {
+    "persona_id": "p_0e1465f97a10",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_0e1465f97a10",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_0e1465f97a10",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_0e1465f97a10",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_0e1465f97a10",
+    "category": "ai_usage",
+    "value": "occasional"
+  },
+  {
+    "persona_id": "p_0e1465f97a10",
+    "category": "search_usage",
+    "value": "google"
+  },
+  {
+    "persona_id": "p_0e1465f97a10",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_0e1465f97a10",
+    "category": "alice_ai_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_0e1465f97a10",
+    "category": "ai_services",
+    "value": "aliceai"
+  },
+  {
+    "persona_id": "p_35b16767318d",
+    "category": "age",
+    "value": "35-44"
+  },
+  {
+    "persona_id": "p_35b16767318d",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_35b16767318d",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_35b16767318d",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_35b16767318d",
+    "category": "children",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_35b16767318d",
+    "category": "ai_usage",
+    "value": "occasional"
+  },
+  {
+    "persona_id": "p_35b16767318d",
+    "category": "search_usage",
+    "value": "google"
+  },
+  {
+    "persona_id": "p_35b16767318d",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_35b16767318d",
+    "category": "ai_services",
+    "value": "gigachat"
+  },
+  {
+    "persona_id": "p_3bc22bfad570",
+    "category": "age",
+    "value": "35-44"
+  },
+  {
+    "persona_id": "p_3bc22bfad570",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_3bc22bfad570",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_3bc22bfad570",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_3bc22bfad570",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_3bc22bfad570",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_3bc22bfad570",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_3bc22bfad570",
+    "category": "ai_services",
+    "value": "deepseek"
+  },
+  {
+    "persona_id": "p_3bc22bfad570",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_95e6cf8f67d4",
+    "category": "age",
+    "value": "15-34"
+  },
+  {
+    "persona_id": "p_95e6cf8f67d4",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_95e6cf8f67d4",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_95e6cf8f67d4",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_95e6cf8f67d4",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_95e6cf8f67d4",
+    "category": "alice_usage",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_95e6cf8f67d4",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_9fb5b3601215",
+    "category": "age",
+    "value": "15-34"
+  },
+  {
+    "persona_id": "p_9fb5b3601215",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_9fb5b3601215",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_9fb5b3601215",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_9fb5b3601215",
+    "category": "children",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_9fb5b3601215",
+    "category": "children_age",
+    "value": "4-7"
+  },
+  {
+    "persona_id": "p_9fb5b3601215",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_9fb5b3601215",
+    "category": "search_usage",
+    "value": "google"
+  },
+  {
+    "persona_id": "p_9fb5b3601215",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_9fb5b3601215",
+    "category": "alice_ai_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_9fb5b3601215",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_9fb5b3601215",
+    "category": "ai_services",
+    "value": "gigachat"
+  },
+  {
+    "persona_id": "p_4962331953ea",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_4962331953ea",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_4962331953ea",
+    "category": "city",
+    "value": "Moscow"
+  },
+  {
+    "persona_id": "p_4962331953ea",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_4962331953ea",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_4962331953ea",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_4962331953ea",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_4962331953ea",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_4962331953ea",
+    "category": "alice_ai_usage",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_4962331953ea",
+    "category": "ai_services",
+    "value": "gigachat"
+  },
+  {
+    "persona_id": "p_9a17813649e2",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_9a17813649e2",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_9a17813649e2",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_9a17813649e2",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_9a17813649e2",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_9a17813649e2",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_9a17813649e2",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_9a17813649e2",
+    "category": "alice_ai_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_9a17813649e2",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_9a17813649e2",
+    "category": "ai_services",
+    "value": "deepseek"
+  },
+  {
+    "persona_id": "p_9a17813649e2",
+    "category": "ai_services",
+    "value": "aliceai"
+  },
+  {
+    "persona_id": "p_3bd7f68e7acd",
+    "category": "age",
+    "value": "35-44"
+  },
+  {
+    "persona_id": "p_3bd7f68e7acd",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_3bd7f68e7acd",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_3bd7f68e7acd",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_3bd7f68e7acd",
+    "category": "children",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_3bd7f68e7acd",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_3bd7f68e7acd",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_3bd7f68e7acd",
+    "category": "alice_ai_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_3bd7f68e7acd",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_3bd7f68e7acd",
+    "category": "ai_services",
+    "value": "aliceai"
+  },
+  {
+    "persona_id": "p_b45aa6846cc3",
+    "category": "age",
+    "value": "15-34"
+  },
+  {
+    "persona_id": "p_b45aa6846cc3",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_b45aa6846cc3",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_b45aa6846cc3",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_b45aa6846cc3",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_b45aa6846cc3",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_b45aa6846cc3",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_b45aa6846cc3",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_b45aa6846cc3",
+    "category": "ai_services",
+    "value": "deepseek"
+  },
+  {
+    "persona_id": "p_b45aa6846cc3",
+    "category": "ai_services",
+    "value": "gigachat"
+  },
+  {
+    "persona_id": "p_eaef36013201",
+    "category": "age",
+    "value": "15-34"
+  },
+  {
+    "persona_id": "p_eaef36013201",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_eaef36013201",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_eaef36013201",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_eaef36013201",
+    "category": "children",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_eaef36013201",
+    "category": "children_age",
+    "value": "0-3"
+  },
+  {
+    "persona_id": "p_eaef36013201",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_eaef36013201",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_eaef36013201",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_eaef36013201",
+    "category": "alice_ai_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_eaef36013201",
+    "category": "ai_services",
+    "value": "deepseek"
+  },
+  {
+    "persona_id": "p_eaef36013201",
+    "category": "ai_services",
+    "value": "aliceai"
+  },
+  {
+    "persona_id": "p_b070099712ab",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_b070099712ab",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_b070099712ab",
+    "category": "city",
+    "value": "Moscow"
+  },
+  {
+    "persona_id": "p_b070099712ab",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_b070099712ab",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_b070099712ab",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_b070099712ab",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_b070099712ab",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_b070099712ab",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_b070099712ab",
+    "category": "ai_services",
+    "value": "gigachat"
+  },
+  {
+    "persona_id": "p_f00569775e9b",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_f00569775e9b",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_f00569775e9b",
+    "category": "city",
+    "value": "Moscow"
+  },
+  {
+    "persona_id": "p_f00569775e9b",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_f00569775e9b",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_f00569775e9b",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_f00569775e9b",
+    "category": "search_usage",
+    "value": "google"
+  },
+  {
+    "persona_id": "p_f00569775e9b",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_f00569775e9b",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_61299f5b7204",
+    "category": "age",
+    "value": "35-44"
+  },
+  {
+    "persona_id": "p_61299f5b7204",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_61299f5b7204",
+    "category": "city",
+    "value": "Moscow"
+  },
+  {
+    "persona_id": "p_61299f5b7204",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_61299f5b7204",
+    "category": "children",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_61299f5b7204",
+    "category": "children_age",
+    "value": "12-15"
+  },
+  {
+    "persona_id": "p_61299f5b7204",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_61299f5b7204",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_61299f5b7204",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_61299f5b7204",
+    "category": "alice_ai_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_61299f5b7204",
+    "category": "ai_services",
+    "value": "aliceai"
+  },
+  {
+    "persona_id": "p_bb42571631b8",
+    "category": "age",
+    "value": "15-34"
+  },
+  {
+    "persona_id": "p_bb42571631b8",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_bb42571631b8",
+    "category": "city",
+    "value": "Moscow"
+  },
+  {
+    "persona_id": "p_bb42571631b8",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_bb42571631b8",
+    "category": "children",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_bb42571631b8",
+    "category": "ai_usage",
+    "value": "occasional"
+  },
+  {
+    "persona_id": "p_bb42571631b8",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_bb42571631b8",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_bb42571631b8",
+    "category": "alice_ai_usage",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_5f08a09f64a3",
+    "category": "age",
+    "value": "45-55"
+  },
+  {
+    "persona_id": "p_5f08a09f64a3",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_5f08a09f64a3",
+    "category": "city",
+    "value": "Moscow"
+  },
+  {
+    "persona_id": "p_5f08a09f64a3",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_5f08a09f64a3",
+    "category": "children",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_5f08a09f64a3",
+    "category": "ai_usage",
+    "value": "occasional"
+  },
+  {
+    "persona_id": "p_5f08a09f64a3",
+    "category": "search_usage",
+    "value": "google"
+  },
+  {
+    "persona_id": "p_5f08a09f64a3",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_5f08a09f64a3",
+    "category": "alice_ai_usage",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_aa711781c05a",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_aa711781c05a",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_aa711781c05a",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_aa711781c05a",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_aa711781c05a",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_aa711781c05a",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_aa711781c05a",
+    "category": "search_usage",
+    "value": "google"
+  },
+  {
+    "persona_id": "p_aa711781c05a",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_aa711781c05a",
+    "category": "alice_ai_usage",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_aa711781c05a",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_eb56c4b5075b",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_eb56c4b5075b",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_eb56c4b5075b",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_eb56c4b5075b",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_eb56c4b5075b",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_eb56c4b5075b",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_eb56c4b5075b",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_eb56c4b5075b",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_eb56c4b5075b",
+    "category": "alice_ai_usage",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_eb56c4b5075b",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_eb56c4b5075b",
+    "category": "ai_services",
+    "value": "gigachat"
+  },
+  {
+    "persona_id": "p_737f2c2d56c2",
+    "category": "age",
+    "value": "15-34"
+  },
+  {
+    "persona_id": "p_737f2c2d56c2",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_737f2c2d56c2",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_737f2c2d56c2",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_737f2c2d56c2",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_737f2c2d56c2",
+    "category": "ai_usage",
+    "value": "occasional"
+  },
+  {
+    "persona_id": "p_737f2c2d56c2",
+    "category": "search_usage",
+    "value": "google"
+  },
+  {
+    "persona_id": "p_737f2c2d56c2",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_737f2c2d56c2",
+    "category": "alice_ai_usage",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_737f2c2d56c2",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_5da248f3b24e",
+    "category": "age",
+    "value": "35-44"
+  },
+  {
+    "persona_id": "p_5da248f3b24e",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_5da248f3b24e",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_5da248f3b24e",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_5da248f3b24e",
+    "category": "children",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_5da248f3b24e",
+    "category": "ai_usage",
+    "value": "non-user"
+  },
+  {
+    "persona_id": "p_5da248f3b24e",
+    "category": "search_usage",
+    "value": "google"
+  },
+  {
+    "persona_id": "p_5da248f3b24e",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_5da248f3b24e",
+    "category": "alice_ai_usage",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_a55633591fe2",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_a55633591fe2",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_a55633591fe2",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_a55633591fe2",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_a55633591fe2",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_a55633591fe2",
+    "category": "ai_usage",
+    "value": "occasional"
+  },
+  {
+    "persona_id": "p_a55633591fe2",
+    "category": "search_usage",
+    "value": "google"
+  },
+  {
+    "persona_id": "p_a55633591fe2",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_a55633591fe2",
+    "category": "alice_ai_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_a55633591fe2",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_5a93603712d9",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_5a93603712d9",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_5a93603712d9",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_5a93603712d9",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_5a93603712d9",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_5a93603712d9",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_5a93603712d9",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_5a93603712d9",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_5a93603712d9",
+    "category": "alice_ai_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_5a93603712d9",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_5a93603712d9",
+    "category": "ai_services",
+    "value": "aliceai"
+  },
+  {
+    "persona_id": "p_15b48c09cfce",
+    "category": "age",
+    "value": "15-34"
+  },
+  {
+    "persona_id": "p_15b48c09cfce",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_15b48c09cfce",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_15b48c09cfce",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_15b48c09cfce",
+    "category": "children",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_15b48c09cfce",
+    "category": "children_age",
+    "value": "0-3"
+  },
+  {
+    "persona_id": "p_15b48c09cfce",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_15b48c09cfce",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_15b48c09cfce",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_15b48c09cfce",
+    "category": "alice_ai_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_15b48c09cfce",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_15b48c09cfce",
+    "category": "ai_services",
+    "value": "aliceai"
+  },
+  {
+    "persona_id": "p_36a382de438d",
+    "category": "age",
+    "value": "15-34"
+  },
+  {
+    "persona_id": "p_36a382de438d",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_36a382de438d",
+    "category": "city",
+    "value": "Moscow"
+  },
+  {
+    "persona_id": "p_36a382de438d",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_36a382de438d",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_36a382de438d",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_36a382de438d",
+    "category": "search_usage",
+    "value": "google"
+  },
+  {
+    "persona_id": "p_36a382de438d",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_cfaaa14aa684",
+    "category": "age",
+    "value": "35-44"
+  },
+  {
+    "persona_id": "p_cfaaa14aa684",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_cfaaa14aa684",
+    "category": "city",
+    "value": "Moscow"
+  },
+  {
+    "persona_id": "p_cfaaa14aa684",
+    "category": "ai_usage",
+    "value": "occasional"
+  },
+  {
+    "persona_id": "p_cfaaa14aa684",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_cfaaa14aa684",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_cfaaa14aa684",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_a01d556aaab4",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_a01d556aaab4",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_a01d556aaab4",
+    "category": "city",
+    "value": "Moscow"
+  },
+  {
+    "persona_id": "p_a01d556aaab4",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_a01d556aaab4",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_a01d556aaab4",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_a01d556aaab4",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_a01d556aaab4",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_aa607cfa1ec1",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_aa607cfa1ec1",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_aa607cfa1ec1",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_aa607cfa1ec1",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_aa607cfa1ec1",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_aa607cfa1ec1",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_aa607cfa1ec1",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_aa607cfa1ec1",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_aa607cfa1ec1",
+    "category": "alice_ai_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_aa607cfa1ec1",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_d42b8441d09f",
+    "category": "age",
+    "value": "15-34"
+  },
+  {
+    "persona_id": "p_d42b8441d09f",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_d42b8441d09f",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_d42b8441d09f",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_d42b8441d09f",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_d42b8441d09f",
+    "category": "ai_usage",
+    "value": "occasional"
+  },
+  {
+    "persona_id": "p_d42b8441d09f",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_d42b8441d09f",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_d42b8441d09f",
+    "category": "alice_ai_usage",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_d42b8441d09f",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_a5f939ea9fc9",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_a5f939ea9fc9",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_a5f939ea9fc9",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_a5f939ea9fc9",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_a5f939ea9fc9",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_a5f939ea9fc9",
+    "category": "ai_usage",
+    "value": "occasional"
+  },
+  {
+    "persona_id": "p_a5f939ea9fc9",
+    "category": "search_usage",
+    "value": "google"
+  },
+  {
+    "persona_id": "p_a5f939ea9fc9",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_8cbbdc82fc30",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_8cbbdc82fc30",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_8cbbdc82fc30",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_8cbbdc82fc30",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_8cbbdc82fc30",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_8cbbdc82fc30",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_8cbbdc82fc30",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_8cbbdc82fc30",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_8cbbdc82fc30",
+    "category": "alice_ai_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_8cbbdc82fc30",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_8cbbdc82fc30",
+    "category": "ai_services",
+    "value": "aliceai"
+  },
+  {
+    "persona_id": "p_155df7c5a62f",
+    "category": "age",
+    "value": "35-44"
+  },
+  {
+    "persona_id": "p_155df7c5a62f",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_155df7c5a62f",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_155df7c5a62f",
+    "category": "ai_usage",
+    "value": "occasional"
+  },
+  {
+    "persona_id": "p_155df7c5a62f",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_155df7c5a62f",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_155df7c5a62f",
+    "category": "alice_ai_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_155df7c5a62f",
+    "category": "ai_services",
+    "value": "aliceai"
+  },
+  {
+    "persona_id": "p_21987353bf86",
+    "category": "age",
+    "value": "35-44"
+  },
+  {
+    "persona_id": "p_21987353bf86",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_21987353bf86",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_21987353bf86",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_21987353bf86",
+    "category": "children",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_21987353bf86",
+    "category": "children_age",
+    "value": "4-7"
+  },
+  {
+    "persona_id": "p_21987353bf86",
+    "category": "ai_usage",
+    "value": "occasional"
+  },
+  {
+    "persona_id": "p_21987353bf86",
+    "category": "search_usage",
+    "value": "google"
+  },
+  {
+    "persona_id": "p_21987353bf86",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_21987353bf86",
+    "category": "alice_ai_usage",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_21987353bf86",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_71cfa1a46275",
+    "category": "age",
+    "value": "35-44"
+  },
+  {
+    "persona_id": "p_71cfa1a46275",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_71cfa1a46275",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_71cfa1a46275",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_71cfa1a46275",
+    "category": "children",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_71cfa1a46275",
+    "category": "ai_usage",
+    "value": "occasional"
+  },
+  {
+    "persona_id": "p_71cfa1a46275",
+    "category": "search_usage",
+    "value": "google"
+  },
+  {
+    "persona_id": "p_71cfa1a46275",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_71cfa1a46275",
+    "category": "ai_services",
+    "value": "gemini"
+  },
+  {
+    "persona_id": "p_3150dc313827",
+    "category": "age",
+    "value": "15-34"
+  },
+  {
+    "persona_id": "p_3150dc313827",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_3150dc313827",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_3150dc313827",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_3150dc313827",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_3150dc313827",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_3150dc313827",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_3150dc313827",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_7129086ca27e",
+    "category": "age",
+    "value": "45-55"
+  },
+  {
+    "persona_id": "p_7129086ca27e",
+    "category": "gender",
+    "value": "male"
+  },
+  {
+    "persona_id": "p_7129086ca27e",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_7129086ca27e",
+    "category": "family",
+    "value": "married"
+  },
+  {
+    "persona_id": "p_7129086ca27e",
+    "category": "children",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_7129086ca27e",
+    "category": "ai_usage",
+    "value": "non-user"
+  },
+  {
+    "persona_id": "p_7129086ca27e",
+    "category": "search_usage",
+    "value": "yandex"
+  },
+  {
+    "persona_id": "p_7129086ca27e",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_7129086ca27e",
+    "category": "alice_ai_usage",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_a4bdeadb9e16",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_a4bdeadb9e16",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_a4bdeadb9e16",
+    "category": "city",
+    "value": "Moscow"
+  },
+  {
+    "persona_id": "p_a4bdeadb9e16",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_a4bdeadb9e16",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_a4bdeadb9e16",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_a4bdeadb9e16",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_a4bdeadb9e16",
+    "category": "ai_services",
+    "value": "chatgpt"
+  },
+  {
+    "persona_id": "p_a4bdeadb9e16",
+    "category": "ai_services",
+    "value": "claude"
+  }
+]

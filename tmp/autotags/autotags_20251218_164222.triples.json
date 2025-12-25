@@ -1,0 +1,47 @@
+[
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "age",
+    "value": "18-24"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "gender",
+    "value": "female"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "city",
+    "value": "other"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "family",
+    "value": "single"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "children",
+    "value": "False"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "ai_usage",
+    "value": "active"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "search_usage",
+    "value": "google"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "alice_usage",
+    "value": "True"
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "category": "alice_ai_usage",
+    "value": "False"
+  }
+]

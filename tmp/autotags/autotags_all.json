@@ -1,0 +1,715 @@
+[
+  {
+    "persona_id": "p_b905c6ae9b6e",
+    "tags": {
+      "age": "18-24",
+      "gender": "male",
+      "city": "other",
+      "family": "married",
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "ai_services": [
+        "chatgpt",
+        "deepseek"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_92a3a8c86e31",
+    "tags": {
+      "age": "35-44",
+      "gender": "female",
+      "city": "other",
+      "family": "married",
+      "children": true,
+      "children_age": "8-11",
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "alice_ai_usage": true,
+      "ai_services": [
+        "aliceai",
+        "gigachat",
+        "chatgpt"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "tags": {
+      "age": "18-24",
+      "gender": "female",
+      "city": "other",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "google",
+      "alice_usage": true,
+      "alice_ai_usage": false,
+      "ai_services": [
+        "chatgpt",
+        "deepseek"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_36a95431951d",
+    "tags": {
+      "age": "18-24",
+      "gender": "male",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "alice_ai_usage": true,
+      "ai_services": [
+        "chatgpt",
+        "aliceai"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_976c8bb57498",
+    "tags": {
+      "age": "18-24",
+      "gender": "male",
+      "city": "other",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "ai_services": [
+        "chatgpt",
+        "deepseek"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_d8c151c1bc10",
+    "tags": {
+      "age": "35-44",
+      "gender": "male",
+      "city": "other",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "ai_services": [
+        "chatgpt",
+        "deepseek"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_e87e4e496f97",
+    "tags": {
+      "age": "18-24",
+      "gender": "female",
+      "city": "Moscow",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "google",
+      "alice_usage": true,
+      "alice_ai_usage": true,
+      "ai_services": [
+        "chatgpt",
+        "aliceai",
+        "gigachat"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_6a795719920a",
+    "tags": {
+      "age": "35-44",
+      "gender": "male",
+      "city": "other",
+      "family": "single",
+      "children": true,
+      "ai_usage": "active",
+      "alice_usage": true,
+      "ai_services": [
+        "chatgpt",
+        "deepseek"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_0e1465f97a10",
+    "tags": {
+      "age": "15-34",
+      "gender": "female",
+      "city": "other",
+      "family": "married",
+      "children": false,
+      "ai_usage": "occasional",
+      "search_usage": "google",
+      "alice_usage": true,
+      "alice_ai_usage": true,
+      "ai_services": [
+        "aliceai"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_35b16767318d",
+    "tags": {
+      "age": "35-44",
+      "gender": "female",
+      "city": "other",
+      "family": "married",
+      "children": true,
+      "ai_usage": "occasional",
+      "search_usage": "google",
+      "alice_usage": true,
+      "ai_services": [
+        "gigachat"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_3bc22bfad570",
+    "tags": {
+      "age": "35-44",
+      "gender": "female",
+      "city": "other",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "ai_services": [
+        "deepseek",
+        "chatgpt"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_95e6cf8f67d4",
+    "tags": {
+      "age": "15-34",
+      "gender": "female",
+      "city": "other",
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "alice_usage": false,
+      "ai_services": [
+        "chatgpt"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_9fb5b3601215",
+    "tags": {
+      "age": "15-34",
+      "gender": "female",
+      "city": "other",
+      "family": "married",
+      "children": true,
+      "children_age": "4-7",
+      "ai_usage": "active",
+      "search_usage": "google",
+      "alice_usage": true,
+      "alice_ai_usage": true,
+      "ai_services": [
+        "chatgpt",
+        "gigachat"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_4962331953ea",
+    "tags": {
+      "age": "18-24",
+      "gender": "male",
+      "city": "Moscow",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "alice_ai_usage": false,
+      "ai_services": [
+        "gigachat"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_9a17813649e2",
+    "tags": {
+      "age": "18-24",
+      "gender": "male",
+      "city": "other",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "alice_usage": true,
+      "alice_ai_usage": true,
+      "ai_services": [
+        "chatgpt",
+        "deepseek",
+        "aliceai"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_3bd7f68e7acd",
+    "tags": {
+      "age": "35-44",
+      "gender": "female",
+      "city": "other",
+      "family": "married",
+      "children": true,
+      "ai_usage": "active",
+      "alice_usage": true,
+      "alice_ai_usage": true,
+      "ai_services": [
+        "chatgpt",
+        "aliceai"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_b45aa6846cc3",
+    "tags": {
+      "age": "15-34",
+      "gender": "male",
+      "city": "other",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "ai_services": [
+        "chatgpt",
+        "deepseek",
+        "gigachat"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_eaef36013201",
+    "tags": {
+      "age": "15-34",
+      "gender": "male",
+      "city": "other",
+      "family": "married",
+      "children": true,
+      "children_age": "0-3",
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "alice_ai_usage": true,
+      "ai_services": [
+        "deepseek",
+        "aliceai"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_b070099712ab",
+    "tags": {
+      "age": "18-24",
+      "gender": "male",
+      "city": "Moscow",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "ai_services": [
+        "chatgpt",
+        "gigachat"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_f00569775e9b",
+    "tags": {
+      "age": "18-24",
+      "gender": "male",
+      "city": "Moscow",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "google",
+      "alice_usage": true,
+      "ai_services": [
+        "chatgpt"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_61299f5b7204",
+    "tags": {
+      "age": "35-44",
+      "gender": "female",
+      "city": "Moscow",
+      "family": "married",
+      "children": true,
+      "children_age": "12-15",
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "alice_ai_usage": true,
+      "ai_services": [
+        "aliceai"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_bb42571631b8",
+    "tags": {
+      "age": "15-34",
+      "gender": "female",
+      "city": "Moscow",
+      "family": "married",
+      "children": true,
+      "ai_usage": "occasional",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "alice_ai_usage": false
+    }
+  },
+  {
+    "persona_id": "p_5f08a09f64a3",
+    "tags": {
+      "age": "45-55",
+      "gender": "female",
+      "city": "Moscow",
+      "family": "married",
+      "children": true,
+      "ai_usage": "occasional",
+      "search_usage": "google",
+      "alice_usage": true,
+      "alice_ai_usage": false
+    }
+  },
+  {
+    "persona_id": "p_aa711781c05a",
+    "tags": {
+      "age": "18-24",
+      "gender": "male",
+      "city": "other",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "google",
+      "alice_usage": true,
+      "alice_ai_usage": false,
+      "ai_services": [
+        "chatgpt"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_eb56c4b5075b",
+    "tags": {
+      "age": "18-24",
+      "gender": "female",
+      "city": "other",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "alice_ai_usage": false,
+      "ai_services": [
+        "chatgpt",
+        "gigachat"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_737f2c2d56c2",
+    "tags": {
+      "age": "15-34",
+      "gender": "male",
+      "city": "other",
+      "family": "married",
+      "children": false,
+      "ai_usage": "occasional",
+      "search_usage": "google",
+      "alice_usage": true,
+      "alice_ai_usage": false,
+      "ai_services": [
+        "chatgpt"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_5da248f3b24e",
+    "tags": {
+      "age": "35-44",
+      "gender": "female",
+      "city": "other",
+      "family": "married",
+      "children": true,
+      "ai_usage": "non-user",
+      "search_usage": "google",
+      "alice_usage": true,
+      "alice_ai_usage": false
+    }
+  },
+  {
+    "persona_id": "p_a55633591fe2",
+    "tags": {
+      "age": "18-24",
+      "gender": "male",
+      "city": "other",
+      "family": "single",
+      "children": false,
+      "ai_usage": "occasional",
+      "search_usage": "google",
+      "alice_usage": true,
+      "alice_ai_usage": true,
+      "ai_services": [
+        "chatgpt"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_5a93603712d9",
+    "tags": {
+      "age": "18-24",
+      "gender": "female",
+      "city": "other",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "alice_ai_usage": true,
+      "ai_services": [
+        "chatgpt",
+        "aliceai"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_15b48c09cfce",
+    "tags": {
+      "age": "15-34",
+      "gender": "female",
+      "city": "other",
+      "family": "married",
+      "children": true,
+      "children_age": "0-3",
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "alice_ai_usage": true,
+      "ai_services": [
+        "chatgpt",
+        "aliceai"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_36a382de438d",
+    "tags": {
+      "age": "15-34",
+      "gender": "male",
+      "city": "Moscow",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "google",
+      "ai_services": [
+        "chatgpt"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_cfaaa14aa684",
+    "tags": {
+      "age": "35-44",
+      "gender": "male",
+      "city": "Moscow",
+      "ai_usage": "occasional",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "ai_services": [
+        "chatgpt"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_a01d556aaab4",
+    "tags": {
+      "age": "18-24",
+      "gender": "female",
+      "city": "Moscow",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "ai_services": [
+        "chatgpt"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_aa607cfa1ec1",
+    "tags": {
+      "age": "18-24",
+      "gender": "female",
+      "city": "other",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "alice_ai_usage": true,
+      "ai_services": [
+        "chatgpt"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_d42b8441d09f",
+    "tags": {
+      "age": "15-34",
+      "gender": "female",
+      "city": "other",
+      "family": "married",
+      "children": false,
+      "ai_usage": "occasional",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "alice_ai_usage": false,
+      "ai_services": [
+        "chatgpt"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_a5f939ea9fc9",
+    "tags": {
+      "age": "18-24",
+      "gender": "male",
+      "city": "other",
+      "family": "single",
+      "children": false,
+      "ai_usage": "occasional",
+      "search_usage": "google",
+      "ai_services": [
+        "chatgpt"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_8cbbdc82fc30",
+    "tags": {
+      "age": "18-24",
+      "gender": "male",
+      "city": "other",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "alice_ai_usage": true,
+      "ai_services": [
+        "chatgpt",
+        "aliceai"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_155df7c5a62f",
+    "tags": {
+      "age": "35-44",
+      "gender": "male",
+      "city": "other",
+      "ai_usage": "occasional",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "alice_ai_usage": true,
+      "ai_services": [
+        "aliceai"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_21987353bf86",
+    "tags": {
+      "age": "35-44",
+      "gender": "female",
+      "city": "other",
+      "family": "married",
+      "children": true,
+      "children_age": "4-7",
+      "ai_usage": "occasional",
+      "search_usage": "google",
+      "alice_usage": true,
+      "alice_ai_usage": false,
+      "ai_services": [
+        "chatgpt"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_71cfa1a46275",
+    "tags": {
+      "age": "35-44",
+      "gender": "female",
+      "city": "other",
+      "family": "married",
+      "children": true,
+      "ai_usage": "occasional",
+      "search_usage": "google",
+      "alice_usage": true,
+      "ai_services": [
+        "gemini"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_3150dc313827",
+    "tags": {
+      "age": "15-34",
+      "gender": "male",
+      "city": "other",
+      "family": "married",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "yandex",
+      "alice_usage": false,
+      "ai_services": [
+        "chatgpt"
+      ]
+    }
+  },
+  {
+    "persona_id": "p_7129086ca27e",
+    "tags": {
+      "age": "45-55",
+      "gender": "male",
+      "city": "other",
+      "family": "married",
+      "children": true,
+      "ai_usage": "non-user",
+      "search_usage": "yandex",
+      "alice_usage": true,
+      "alice_ai_usage": false
+    }
+  },
+  {
+    "persona_id": "p_a4bdeadb9e16",
+    "tags": {
+      "age": "18-24",
+      "gender": "female",
+      "city": "Moscow",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "alice_usage": true,
+      "ai_services": [
+        "chatgpt",
+        "claude"
+      ]
+    }
+  }
+]

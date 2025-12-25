@@ -1,0 +1,17 @@
+.git
+.github
+.env
+__pycache__/
+**/__pycache__/
+**/*.pyc
+.DS_Store
+runs/
+tmp/
+data/
+dist/
+build/
+node_modules/
+venv/
+env/
+*.log
+

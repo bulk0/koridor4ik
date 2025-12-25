@@ -1,0 +1,20 @@
+[
+  {
+    "persona_id": "p_1398d9dddbe1",
+    "tags": {
+      "age": "18-24",
+      "gender": "female",
+      "city": "other",
+      "family": "single",
+      "children": false,
+      "ai_usage": "active",
+      "search_usage": "google",
+      "alice_usage": true,
+      "alice_ai_usage": false,
+      "ai_services": [
+        "chatgpt",
+        "deepseek"
+      ]
+    }
+  }
+]

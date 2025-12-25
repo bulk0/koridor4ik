@@ -1,0 +1,52 @@
+name: Deploy to VM (SSH)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Prepare env file
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env.remote
+
+      - name: Deploy over SSH
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+        run: |
+          set -e
+          REMOTE_DIR="~/apps/synthetic_v2"
+          ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" 'bash -s' << 'EOF'
+          set -e
+          sudo apt-get update
+          sudo apt-get install -y docker.io docker-compose-plugin git
+          sudo usermod -aG docker $USER || true
+          mkdir -p ~/apps
+          if [ ! -d "$REMOTE_DIR/.git" ]; then
+            git clone https://github.com/${GITHUB_REPOSITORY}.git "$REMOTE_DIR"
+          else
+            cd "$REMOTE_DIR" && git fetch --all && git reset --hard origin/main
+          fi
+          EOF
+          scp -P "$SSH_PORT" .env.remote "$SSH_USER@$SSH_HOST:$REMOTE_DIR/.env"
+          ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" 'bash -s' << 'EOF'
+          set -e
+          cd "$REMOTE_DIR/deploy"
+          docker compose build
+          docker compose up -d
+          EOF
+
+
