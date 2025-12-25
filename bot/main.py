@@ -6,6 +6,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 from aiohttp import web
+from aiogram.types import FSInputFile
 
 from .config import BotConfig
 from .handlers.start import router as start_router
@@ -46,7 +47,12 @@ async def run_webhook() -> None:
 	webhook_path = f"/{cfg.webhook_secret_path}"
 	SimpleRequestHandler(dispatcher=dp, bot=bot).register(app, path=webhook_path)
 	setup_application(app, dp, bot=bot)
-	await bot.set_webhook(url=f"{cfg.webhook_base_url.rstrip('/')}{webhook_path}")
+	url = f"{cfg.webhook_base_url.rstrip('/')}{webhook_path}"
+	if cfg.webhook_self_signed_cert_path and cfg.webhook_self_signed_cert_path.exists():
+		cert = FSInputFile(str(cfg.webhook_self_signed_cert_path))
+		await bot.set_webhook(url=url, certificate=cert)
+	else:
+		await bot.set_webhook(url=url)
 	runner = web.AppRunner(app)
 	await runner.setup()
 	site = web.TCPSite(runner, "0.0.0.0", 8080)

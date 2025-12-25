@@ -42,3 +42,28 @@ docker compose up -d
 - Рекомендуется периодически архивировать/выгружать в Object Storage.
 
 
+## Без домена: вебхук на IP с self‑signed сертификатом
+
+Если домена нет, можно использовать публичный IP ВМ в качестве `WEBHOOK_BASE_URL` и self‑signed сертификат:
+1) Сгенерируйте сертификат с SAN=IP:
+```
+bash deploy/generate_selfsigned.sh <PUBLIC_IP>
+```
+Файлы появятся в `deploy/certs/selfsigned.crt` и `deploy/certs/selfsigned.key`.
+2) Проверьте, что `deploy/docker-compose.yml` монтирует `./certs` в `nginx:/etc/nginx/certs` и `bot:/app/certs`.
+3) Обновите `.env`:
+```
+TELEGRAM_MODE=webhook
+WEBHOOK_BASE_URL=https://<PUBLIC_IP>
+WEBHOOK_SECRET_PATH=<случайный-путь>
+WEBHOOK_SELF_SIGNED_CERT_PATH=/app/certs/selfsigned.crt
+```
+4) Запустите:
+```
+cd deploy
+docker compose up -d --build
+```
+Бот установит вебхук, передав сертификат Telegram (поддерживается self‑signed, когда файл сертификата передан при setWebhook).
+Проверка: `curl -kI https://<PUBLIC_IP>/health` → 200 OK.
+
+

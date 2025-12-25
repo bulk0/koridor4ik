@@ -22,6 +22,7 @@ class BotConfig:
 	mode: str  # "webhook" | "polling"
 	webhook_base_url: Optional[str]
 	webhook_secret_path: Optional[str]
+	webhook_self_signed_cert_path: Optional[Path]
 	personas_db_path: Path
 	llm_provider: Optional[str]
 	llm_model: Optional[str]
@@ -38,6 +39,7 @@ class BotConfig:
 			mode=mode,
 			webhook_base_url=os.getenv("WEBHOOK_BASE_URL"),
 			webhook_secret_path=os.getenv("WEBHOOK_SECRET_PATH"),
+			webhook_self_signed_cert_path=Path(os.getenv("WEBHOOK_SELF_SIGNED_CERT_PATH")) if os.getenv("WEBHOOK_SELF_SIGNED_CERT_PATH") else None,
 			personas_db_path=personas_db_path,
 			llm_provider=os.getenv("LLM_PROVIDER"),
 			llm_model=os.getenv("LLM_MODEL"),
