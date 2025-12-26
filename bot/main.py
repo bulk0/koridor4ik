@@ -46,6 +46,39 @@ async def run_webhook() -> None:
 	async def health_handler(request):
 		return web.Response(text="ok")
 	app.router.add_get("/health", health_handler)
+	# debug: DNS and outbound checks
+	async def dns_handler(request):
+		import socket
+		try:
+			addrs = socket.getaddrinfo("api.telegram.org", 443, proto=socket.IPPROTO_TCP)
+			items = [{"family": a[0], "socktype": a[1], "proto": a[2], "addr": a[4]} for a in addrs]
+			return web.json_response({"ok": True, "api.telegram.org": items})
+		except Exception as e:
+			return web.json_response({"ok": False, "error": str(e)}, status=500)
+	app.router.add_get("/debug/dns", dns_handler)
+	async def httpbin_handler(request):
+		import aiohttp, asyncio
+		try:
+			timeout = aiohttp.ClientTimeout(total=8)
+			async with aiohttp.ClientSession(timeout=timeout) as s:
+				async with s.get("https://httpbin.org/get") as r:
+					txt = await r.text()
+			return web.Response(text=txt, content_type="application/json")
+		except Exception as e:
+			return web.json_response({"ok": False, "error": str(e)}, status=500)
+	app.router.add_get("/debug/http", httpbin_handler)
+	async def getme_handler(request):
+		import aiohttp
+		try:
+			timeout = aiohttp.ClientTimeout(total=8)
+			url = f"https://api.telegram.org/bot{cfg.bot_token}/getMe"
+			async with aiohttp.ClientSession(timeout=timeout) as s:
+				async with s.get(url) as r:
+					txt = await r.text()
+			return web.Response(text=txt, content_type="application/json")
+		except Exception as e:
+			return web.json_response({"ok": False, "error": str(e)}, status=500)
+	app.router.add_get("/debug/getme", getme_handler)
 	webhook_path = f"/{cfg.webhook_secret_path}"
 	SimpleRequestHandler(dispatcher=dp, bot=bot).register(app, path=webhook_path)
 	setup_application(app, dp, bot=bot)
