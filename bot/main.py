@@ -24,11 +24,9 @@ logger = logging.getLogger("bot")
 def _build_bot(cfg: BotConfig) -> Bot:
 	# Сессия Telegram с принудительным IPv4 и ограниченным таймаутом,
 	# т.к. на некоторых платформах IPv6/длинные коннекты могут виснуть.
-	import socket, aiohttp
-	timeout = aiohttp.ClientTimeout(total=15)
-	connector = aiohttp.TCPConnector(family=socket.AF_INET, ttl_dns_cache=300)
-	aiohttp_sess = aiohttp.ClientSession(timeout=timeout, connector=connector, trust_env=True)
-	session = AiohttpSession(aiohttp_sess)
+	import aiohttp
+	timeout = aiohttp.ClientTimeout(total=20)
+	session = AiohttpSession(timeout=timeout)
 	return Bot(token=cfg.bot_token, session=session)
 
 async def _setup_dp() -> Dispatcher:
