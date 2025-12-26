@@ -47,17 +47,22 @@ async def run_webhook() -> None:
 	webhook_path = f"/{cfg.webhook_secret_path}"
 	SimpleRequestHandler(dispatcher=dp, bot=bot).register(app, path=webhook_path)
 	setup_application(app, dp, bot=bot)
-	url = f"{cfg.webhook_base_url.rstrip('/')}{webhook_path}"
-	if cfg.webhook_self_signed_cert_path and cfg.webhook_self_signed_cert_path.exists():
-		cert = FSInputFile(str(cfg.webhook_self_signed_cert_path))
-		await bot.set_webhook(url=url, certificate=cert)
-	else:
-		await bot.set_webhook(url=url)
 	runner = web.AppRunner(app)
 	await runner.setup()
 	site = web.TCPSite(runner, "0.0.0.0", 8080)
 	await site.start()
 	logger.info("Webhook started on 0.0.0.0:8080")
+	# Устанавливаем вебхук после старта сервера; ошибки не фатальны (сервис остаётся healthy)
+	try:
+		url = f"{cfg.webhook_base_url.rstrip('/')}{webhook_path}"
+		if cfg.webhook_self_signed_cert_path and cfg.webhook_self_signed_cert_path.exists():
+			cert = FSInputFile(str(cfg.webhook_self_signed_cert_path))
+			await bot.set_webhook(url=url, certificate=cert)
+		else:
+			await bot.set_webhook(url=url)
+		logger.info("Webhook set to %s", url)
+	except Exception as e:
+		logger.warning("Failed to set webhook: %s", e)
 	while True:
 		await asyncio.sleep(3600)
 
