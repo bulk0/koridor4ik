@@ -8,6 +8,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 from aiohttp import web
 from aiogram.types import FSInputFile
+from aiogram.client.session.aiohttp import AiohttpSession
 
 from .config import BotConfig
 from .handlers.start import router as start_router
@@ -19,6 +20,15 @@ from .handlers.candidates import router as candidates_router
 _level = os.getenv("LOG_LEVEL", "INFO").upper()
 logging.basicConfig(level=getattr(logging, _level, logging.INFO))
 logger = logging.getLogger("bot")
+
+def _build_bot(cfg: BotConfig) -> Bot:
+	# Сессия Telegram с принудительным IPv4 и ограниченным таймаутом,
+	# т.к. на некоторых платформах IPv6/длинные коннекты могут виснуть.
+	import socket, aiohttp
+	timeout = aiohttp.ClientTimeout(total=15)
+	connector = aiohttp.TCPConnector(family=socket.AF_INET, ttl_dns_cache=300)
+	session = AiohttpSession(timeout=timeout, connector=connector)
+	return Bot(token=cfg.bot_token, session=session)
 
 async def _setup_dp() -> Dispatcher:
 	dp = Dispatcher(storage=MemoryStorage())
@@ -32,14 +42,14 @@ async def _setup_dp() -> Dispatcher:
 async def run_polling() -> None:
 	cfg = BotConfig.from_env()
 	cfg.validate()
-	bot = Bot(token=cfg.bot_token)
+	bot = _build_bot(cfg)
 	dp = await _setup_dp()
 	await dp.start_polling(bot)
 
 async def run_webhook() -> None:
 	cfg = BotConfig.from_env()
 	cfg.validate()
-	bot = Bot(token=cfg.bot_token)
+	bot = _build_bot(cfg)
 	dp = await _setup_dp()
 	app = web.Application()
 	# health endpoint
