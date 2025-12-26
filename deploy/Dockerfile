@@ -1,23 +1,11 @@
-FROM python:3.11-alpine AS builder
-
+FROM python:3.11-slim
 WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-RUN apk add --no-cache build-base
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
 COPY bot/requirements.txt /app/bot/requirements.txt
-RUN pip wheel --wheel-dir /wheels -r /app/bot/requirements.txt
-
-FROM python:3.11-alpine AS runtime
-WORKDIR /app
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
-
-RUN apk add --no-cache ca-certificates
-COPY --from=builder /wheels /wheels
-# Сначала скопируем requirements.txt, затем установим зависимости из wheel-кэша
-COPY bot/requirements.txt /app/bot/requirements.txt
-RUN pip install --no-cache-dir --no-index --find-links=/wheels -r /app/bot/requirements.txt
+RUN pip install --no-cache-dir -r /app/bot/requirements.txt
 
 # Копируем проект
 COPY . /app
