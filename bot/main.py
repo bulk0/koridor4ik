@@ -27,7 +27,8 @@ def _build_bot(cfg: BotConfig) -> Bot:
 	import socket, aiohttp
 	timeout = aiohttp.ClientTimeout(total=15)
 	connector = aiohttp.TCPConnector(family=socket.AF_INET, ttl_dns_cache=300)
-	session = AiohttpSession(timeout=timeout, connector=connector)
+	aiohttp_sess = aiohttp.ClientSession(timeout=timeout, connector=connector, trust_env=True)
+	session = AiohttpSession(aiohttp_sess)
 	return Bot(token=cfg.bot_token, session=session)
 
 async def _setup_dp() -> Dispatcher:
