@@ -15,7 +15,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 RUN apk add --no-cache ca-certificates
 COPY --from=builder /wheels /wheels
-RUN pip install --no-cache-dir --no-index --find-links=/wheels -r /app/bot/requirements.txt || true
+# Сначала скопируем requirements.txt, затем установим зависимости из wheel-кэша
+COPY bot/requirements.txt /app/bot/requirements.txt
+RUN pip install --no-cache-dir --no-index --find-links=/wheels -r /app/bot/requirements.txt
 
 # Копируем проект
 COPY . /app
