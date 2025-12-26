@@ -7,8 +7,16 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 ROOT = Path(__file__).resolve().parents[2]
-RUNS_DIR = ROOT / "runs" / "chats" / "bot"
-RUNS_DIR.mkdir(parents=True, exist_ok=True)
+# Разрешаем переопределить путь к логам через переменную окружения (для PaaS, где /app может быть read-only)
+import os
+_runs_root = Path(os.getenv("RUNS_DIR", str(ROOT / "runs")))
+RUNS_DIR = _runs_root / "chats" / "bot"
+try:
+	RUNS_DIR.mkdir(parents=True, exist_ok=True)
+except Exception:
+	# Фолбэк в /tmp если нет прав записи
+	RUNS_DIR = Path("/tmp/synthetic_runs/chats/bot")
+	RUNS_DIR.mkdir(parents=True, exist_ok=True)
 
 def now_ts() -> str:
 	return datetime.now().strftime("%Y%m%d_%H%M%S")

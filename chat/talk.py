@@ -21,9 +21,16 @@ except Exception:
 ROOT = Path(__file__).resolve().parents[1]
 DB_PATH = ROOT / "db" / "personas.sqlite"
 RUNS_DIR = ROOT / "runs"
-RUNS_DIR.mkdir(parents=True, exist_ok=True)
+try:
+    RUNS_DIR.mkdir(parents=True, exist_ok=True)
+except Exception:
+    # В средах с read-only FS (PaaS) просто пропускаем создание каталога на этапе импорта
+    pass
 CONFIG_DIR = ROOT / "config"
-CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+try:
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+except Exception:
+    pass
 PRESETS_PATH = CONFIG_DIR / "presets.json"
 
 from .llm_client import LLMClient  # type: ignore
