@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import os
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
@@ -15,7 +16,8 @@ from .handlers.filter_search import router as filter_router
 from .handlers.chat import router as chat_router
 from .handlers.candidates import router as candidates_router
 
-logging.basicConfig(level=logging.INFO)
+_level = os.getenv("LOG_LEVEL", "INFO").upper()
+logging.basicConfig(level=getattr(logging, _level, logging.INFO))
 logger = logging.getLogger("bot")
 
 async def _setup_dp() -> Dispatcher:
