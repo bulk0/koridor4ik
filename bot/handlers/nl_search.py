@@ -16,6 +16,13 @@ from ..utils.safe_telegram import safe_answer, safe_edit, safe_typing
 router = Router()
 _search = PersonaSearchService()
 
+def _format_catalog_brief(catalog: dict) -> str:
+	lines = ["Популярные теги (ключ — примеры значений):"]
+	for cat, pairs in catalog.items():
+		values = ", ".join([v for v, _ in pairs[:6]])
+		lines.append(f"- {cat}: {values}{' …' if len(pairs) > 6 else ''}")
+	return "\n".join(lines)
+
 @router.message(DialogStates.nl_query)
 async def nl_query(message: Message, state: FSMContext) -> None:
 	query = (message.text or "").strip()
@@ -80,5 +87,18 @@ async def _show_candidates_page(message: Message, personas, page: int, selected:
 		"Выберите собеседников (нажимайте на пункты, затем «Готово»). Можно также написать краткое описание в ответ.",
 		reply_markup=kb,
 	)
+
+@router.callback_query(F.data == "refine:popular")
+async def on_popular_tags(callback: CallbackQuery, state: FSMContext) -> None:
+	catalog = await _search.tags_catalog()
+	text = _format_catalog_brief(catalog)
+	await callback.message.answer(text)
+	await callback.answer()
+
+@router.callback_query(F.data == "refine:retry")
+async def on_retry(callback: CallbackQuery, state: FSMContext) -> None:
+	await state.set_state(DialogStates.nl_query)
+	await callback.message.answer("Опишите, с кем хотите поговорить. Примеры: «пользователь нейросетей в декрете», «Екатерина из Екатеринбурга».")
+	await callback.answer()
 
 
