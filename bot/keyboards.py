@@ -34,6 +34,7 @@ def candidates_selection_kb(personas: list[tuple[str, str]], selected: set[int],
 def chat_controls_kb() -> InlineKeyboardMarkup:
 	return InlineKeyboardMarkup(inline_keyboard=[
 		[InlineKeyboardButton(text="Выгрузить ответы", callback_data="chat:export_answers")],
+		[InlineKeyboardButton(text="Выгрузить всю сессию", callback_data="chat:export_session")],
 		[InlineKeyboardButton(text="Закончить", callback_data="chat:finish")],
 	])
 
@@ -42,6 +43,11 @@ def refine_search_kb() -> InlineKeyboardMarkup:
 		[InlineKeyboardButton(text="Попробовать ещё раз", callback_data="refine:retry")],
 		[InlineKeyboardButton(text="Показать популярные теги", callback_data="refine:popular")],
 		[InlineKeyboardButton(text="Завершить диалог", callback_data="finish:dialog")],
+	])
+
+def answer_kb(idx: int) -> InlineKeyboardMarkup:
+	return InlineKeyboardMarkup(inline_keyboard=[
+		[InlineKeyboardButton(text="Сохранить этот ответ", callback_data=f"ans:save:{idx}")],
 	])
 
 

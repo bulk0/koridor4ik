@@ -67,4 +67,12 @@ def export_answers_file(session: SessionFiles, question: str, answers: List[Dict
 	out.write_text("\n".join(lines), encoding="utf-8")
 	return out
 
+def export_single_answer(session: SessionFiles, question: str, title: str, answer: str) -> Path:
+	ts = now_ts()
+	safe_title = "".join(ch for ch in title if ch.isalnum() or ch in (" ", "-", "_")).strip().replace(" ", "_")[:60]
+	out = session.session_dir / f"answer_{safe_title}_{ts}.md"
+	content = f"# Ответ персоны\n\n## Персона\n\n{title}\n\n## Вопрос\n\n{question}\n\n## Ответ\n\n{answer}\n"
+	out.write_text(content, encoding="utf-8")
+	return out
+
 
