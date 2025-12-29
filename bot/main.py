@@ -16,6 +16,7 @@ from .handlers.nl_search import router as nl_router
 from .handlers.filter_search import router as filter_router
 from .handlers.chat import router as chat_router
 from .handlers.candidates import router as candidates_router
+from .handlers.finish import router as finish_router
 
 _level = os.getenv("LOG_LEVEL", "INFO").upper()
 logging.basicConfig(level=getattr(logging, _level, logging.INFO))
@@ -36,6 +37,7 @@ async def _setup_dp() -> Dispatcher:
 	dp.include_router(filter_router)
 	dp.include_router(candidates_router)
 	dp.include_router(chat_router)
+	dp.include_router(finish_router)
 	return dp
 
 async def run_polling() -> None:

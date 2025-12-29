@@ -6,6 +6,7 @@ def mode_choice_kb() -> InlineKeyboardMarkup:
 	return InlineKeyboardMarkup(inline_keyboard=[
 		[InlineKeyboardButton(text="Поговорить с конкретным человеком", callback_data="mode:nl")],
 		[InlineKeyboardButton(text="Выбрать по фильтрам", callback_data="mode:filters")],
+		[InlineKeyboardButton(text="Завершить диалог", callback_data="finish:dialog")],
 	])
 
 def candidates_selection_kb(personas: list[tuple[str, str]], selected: set[int], page: int, page_size: int = 5) -> InlineKeyboardMarkup:
@@ -27,6 +28,7 @@ def candidates_selection_kb(personas: list[tuple[str, str]], selected: set[int],
 		InlineKeyboardButton(text="Готово", callback_data="cand:done"),
 		InlineKeyboardButton(text="Очистить", callback_data="cand:clear"),
 	])
+	rows.append([InlineKeyboardButton(text="Завершить диалог", callback_data="finish:dialog")])
 	return InlineKeyboardMarkup(inline_keyboard=rows)
 
 def chat_controls_kb() -> InlineKeyboardMarkup:
@@ -39,6 +41,7 @@ def refine_search_kb() -> InlineKeyboardMarkup:
 	return InlineKeyboardMarkup(inline_keyboard=[
 		[InlineKeyboardButton(text="Попробовать ещё раз", callback_data="refine:retry")],
 		[InlineKeyboardButton(text="Показать популярные теги", callback_data="refine:popular")],
+		[InlineKeyboardButton(text="Завершить диалог", callback_data="finish:dialog")],
 	])
 
 

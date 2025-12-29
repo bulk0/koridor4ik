@@ -6,6 +6,7 @@ from aiogram.fsm.context import FSMContext
 
 from ..states import DialogStates
 from ..services.persona_search import PersonaSearchService
+from ..keyboards import refine_search_kb
 from ..services.logger import log_event
 
 router = Router()
@@ -55,7 +56,7 @@ async def filter_intro(message: Message, state: FSMContext) -> None:
 		"или: ai_services=chatgpt,aliceai\n"
 		"не: children=True\n"
 	)
-	await message.answer(text)
+	await message.answer(text, reply_markup=refine_search_kb())
 	await state.set_state(DialogStates.filter_collect)
 
 @router.message(DialogStates.filter_collect)
@@ -65,7 +66,8 @@ async def filter_collect(message: Message, state: FSMContext) -> None:
 	n = len(personas)
 	if n == 0:
 		await message.answer(
-			"Ничего не нашли по заданным фильтрам. Попробуйте упростить условия (меньше И/НЕ)."
+			"Ничего не нашли по заданным фильтрам. Попробуйте упростить условия (меньше И/НЕ).",
+			reply_markup=refine_search_kb(),
 		)
 		if message.from_user:
 			log_event(message.from_user.id, "auto", "filter_search_empty", include_all=include_all, include_any=include_any, exclude=exclude)
@@ -76,7 +78,7 @@ async def filter_collect(message: Message, state: FSMContext) -> None:
 	lines.append("Если подходит — напишите номера (например: 1,3-5) или краткое описание для выбора.")
 	await state.update_data(fl_personas=[(p.persona_id, p.title) for p in personas])
 	await state.set_state(DialogStates.filter_candidates)
-	await message.answer("\n".join(lines))
+	await message.answer("\n".join(lines), reply_markup=refine_search_kb())
 	if message.from_user:
 		log_event(message.from_user.id, "auto", "filter_search_ok", n_candidates=n)
 
