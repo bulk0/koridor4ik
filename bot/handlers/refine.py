@@ -7,6 +7,7 @@ from aiogram.fsm.context import FSMContext
 from ..states import DialogStates
 from ..services.persona_search import PersonaSearchService
 from ..keyboards import refine_search_kb
+from ..utils.safe_telegram import safe_answer
 
 router = Router()
 _search = PersonaSearchService()
@@ -33,7 +34,7 @@ async def show_popular_tags(callback: CallbackQuery, state: FSMContext) -> None:
 		)
 	else:
 		text += "\n\nОпишите, с кем хотите поговорить (одной фразой)."
-	await callback.message.answer(text, reply_markup=refine_search_kb())
+	await safe_answer(callback.message, text, reply_markup=refine_search_kb())
 	await callback.answer()
 
 @router.callback_query(F.data == "refine:retry")

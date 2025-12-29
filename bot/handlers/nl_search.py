@@ -128,17 +128,6 @@ async def _show_candidates_page(message: Message, personas, page: int, selected:
 		reply_markup=kb,
 	)
 
-@router.callback_query(F.data == "refine:popular")
-async def on_popular_tags(callback: CallbackQuery, state: FSMContext) -> None:
-	catalog = await _search.tags_catalog()
-	text = _format_catalog_brief(catalog)
-	await callback.message.answer(text)
-	await callback.answer()
-
-@router.callback_query(F.data == "refine:retry")
-async def on_retry(callback: CallbackQuery, state: FSMContext) -> None:
-	await state.set_state(DialogStates.nl_query)
-	await callback.message.answer("Опишите, с кем хотите поговорить. Примеры: «пользователь нейросетей в декрете», «Екатерина из Екатеринбурга».")
-	await callback.answer()
+# Коллбеки refine:* обрабатываются в handlers/refine.py
 
 
