@@ -100,14 +100,16 @@ async def nl_query(message: Message, state: FSMContext) -> None:
 		if message.from_user:
 			log_event(message.from_user.id, "auto", "nl_search_empty", query=query)
 		return
-	# Если много совпадений — показываем 5 примеров и просим уточнить
+	# Если много совпадений — показываем 5 примеров и просим уточнить/выбрать номер
 	if len(personas) >= 10:
 		lines = ["Совпадений много. Примеры (5):"]
 		for idx, p in enumerate(personas[:5], 1):
 			lines.append(f"{idx}) {p.title}")
-		lines.append("\nНапишите номер нужной персоны из примеров ИЛИ уточните (город, возраст, дети, поисковик) или нажмите «Попробовать ещё раз».")
-		await message.answer("\n".join(lines), reply_markup=refine_search_kb())
-		await state.update_data(nl_preview=[(p.persona_id, p.title) for p in personas[:5]])
+		top_n = min(15, len(personas))
+		lines.append(f"\nНапишите номер нужной персоны (1–{top_n}) ИЛИ уточните (город, возраст, дети, поисковик) или нажмите «Попробовать ещё раз».")
+		await safe_answer(message, "\n".join(lines), reply_markup=refine_search_kb())
+		# сохраняем больше, чем показываем, чтобы можно было выбрать 6,7,… по номеру
+		await state.update_data(nl_preview=[(p.persona_id, p.title) for p in personas[:top_n]])
 		await state.set_state(DialogStates.nl_query)
 		return
 	# Показать кандидатов для выбора
