@@ -6,7 +6,7 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 
 from ..states import DialogStates
-from ..keyboards import mode_choice_kb, welcome_kb
+from ..keyboards import mode_choice_kb
 from ..services.logger import log_event
 
 router = Router()
@@ -23,19 +23,16 @@ async def cmd_start(message: Message, state: FSMContext) -> None:
 		"Подсказки:\n"
 		"- Если предложу список примеров, можно писать просто номер (например, «3» или «3)»).\n"
 		"- Во время поиска и ответов покажу прогресс.\n\n"
-		"Нажмите «Начать», чтобы выбрать способ поиска."
+		"Выберите способ поиска:"
 	)
-	await message.answer(text, reply_markup=welcome_kb())
+	await message.answer(text, reply_markup=mode_choice_kb())
 	if message.from_user:
 		log_event(message.from_user.id, "auto", "start", text="/start")
 
 @router.callback_query(F.data == "start:go")
 async def on_start_go(callback: CallbackQuery, state: FSMContext) -> None:
 	await state.set_state(DialogStates.mode_choice)
-	await callback.message.answer(
-		"Выберите способ поиска:",
-		reply_markup=mode_choice_kb(),
-	)
+	await callback.message.answer("Выберите способ поиска:", reply_markup=mode_choice_kb())
 	await callback.answer()
 
 @router.callback_query(F.data.startswith("mode:"))
