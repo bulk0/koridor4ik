@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
+from aiogram.enums import ChatAction
+import asyncio
 from aiogram.fsm.context import FSMContext
 
 from ..states import DialogStates
@@ -25,7 +27,27 @@ async def nl_query(message: Message, state: FSMContext) -> None:
 	info = await llm.preflight_check()
 	if message.from_user:
 		log_event(message.from_user.id, "auto", "preflight_llm_ok", model=info.get("model"), supports=info.get("supports"))
-	personas = await _search.search_by_description(query, llm, k_fts=50, top_k=15)
+	# Прогресс: отбивки и typing
+	status = await message.answer("Связываюсь с базой данных…")
+	stop = asyncio.Event()
+	async def typing_loop():
+		while not stop.is_set():
+			try:
+				await message.bot.send_chat_action(message.chat.id, ChatAction.TYPING)
+			except Exception:
+				pass
+			await asyncio.sleep(4)
+	typing_task = asyncio.create_task(typing_loop())
+	try:
+		await status.edit_text("Ищу кандидатов (FTS)…")
+		# Новый быстрый поиск с параллельным LLM‑реранжом
+		personas = await _search.search_by_description_fast(query, llm, k_fts=40, top_k=12)
+		if not personas:
+			await status.edit_text("FTS не нашёл результатов. Пробую умный поиск по смыслу…")
+			personas = await _search.search_by_description(query, llm, k_fts=50, top_k=15)
+	finally:
+		stop.set()
+		await typing_task
 	if not personas:
 		await message.answer(
 			"Ничего не нашли. Попробуйте упростить запрос или снизить ожидания (уберите редкие условия, не уточняйте город/возраст/дети/поисковик).",
@@ -46,6 +68,7 @@ async def nl_query(message: Message, state: FSMContext) -> None:
 	# Показать кандидатов для выбора
 	await state.update_data(nl_personas=[(p.persona_id, p.title) for p in personas], cand_page=0, cand_selected=[])
 	await state.set_state(DialogStates.nl_candidates)
+	await status.edit_text(f"Найдено персон: {len(personas)}. Показываю список…")
 	await _show_candidates_page(message, personas, page=0, selected=set())
 	if message.from_user:
 		log_event(message.from_user.id, "auto", "nl_search_ok", query=query, n_candidates=len(personas))

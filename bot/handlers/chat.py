@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 from aiogram import Router
 from aiogram.types import Message, CallbackQuery, FSInputFile
+from aiogram.enums import ChatAction
 from aiogram.fsm.context import FSMContext
 
 from ..states import DialogStates
@@ -80,6 +81,18 @@ async def chat_ask(message: Message, state: FSMContext) -> None:
 	session = ensure_session_files(user_id)
 	append_question(session, question)
 	llm = AsyncLLMClient()
+	# Прогресс/typing
+	status = await message.answer("Готовлю ответы… 0/?")
+	import asyncio
+	stop = asyncio.Event()
+	async def typing_loop():
+		while not stop.is_set():
+			try:
+				await message.bot.send_chat_action(message.chat.id, ChatAction.TYPING)
+			except Exception:
+				pass
+			await asyncio.sleep(4)
+	typing_task = asyncio.create_task(typing_loop())
 	# Получаем профили синхронно в пуле (чтобы собрать build_prompt)
 	from chat.talk import conn
 	def _load_profiles(ids: list[str]) -> list[Persona]:
@@ -91,21 +104,34 @@ async def chat_ask(message: Message, state: FSMContext) -> None:
 		return [Persona(*row) for row in rows]
 	persona_ids = [pid for pid, _ in chosen]
 	personas = await asyncio.to_thread(_load_profiles, persona_ids)
-	tasks = []
-	for p in personas:
-		system, user = build_prompt(p.profile_md, question)
-		tasks.append(llm.chat(system=system, user=user, temperature=1.0))
-	results = await asyncio.gather(*tasks, return_exceptions=True)
 	collected = []
-	for p, r in zip(personas, results):
-		if isinstance(r, Exception):
-			answer = f"(ошибка ответа: {r})"
-			log_event(user_id, "auto", "answer_error", persona=p.title, error=str(r))
+	done = 0
+	total = len(personas)
+	await status.edit_text(f"Готовлю ответы… {done}/{total}")
+	async def one_answer(p: Persona):
+		system, user = build_prompt(p.profile_md, question)
+		try:
+			txt = await llm.chat(system=system, user=user, temperature=1.0)
+			return p, txt, None
+		except Exception as e:
+			return p, None, e
+	for coro in asyncio.as_completed([one_answer(p) for p in personas]):
+		p, txt, err = await coro
+		if err:
+			answer = f"(ошибка ответа: {err})"
+			log_event(user_id, "auto", "answer_error", persona=p.title, error=str(err))
 		else:
-			answer = str(r)
+			answer = str(txt)
 		append_answer(session, p.title, answer)
 		await message.answer(f"— {p.title} —\n{answer}")
 		collected.append({"title": p.title, "answer": answer})
+		done += 1
+		try:
+			await status.edit_text(f"Готовлю ответы… {done}/{total}")
+		except Exception:
+			pass
+	stop.set()
+	await typing_task
 	await state.update_data(last_question=question, last_answers=collected)
 
 @router.callback_query(lambda c: c.data in {"chat:export_answers", "chat:finish"})
