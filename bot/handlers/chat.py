@@ -10,7 +10,7 @@ from ..states import DialogStates
 from ..services.async_llm import AsyncLLMClient
 from ..services.persona_search import PersonaSearchService
 from ..services.logger import ensure_session_files, append_question, append_answer, export_answers_file, export_single_answer, log_event
-from ..keyboards import chat_controls_kb, answer_kb, finish_kb
+from ..keyboards import chat_controls_kb, answer_kb, mode_choice_kb
 from ..utils.safe_telegram import safe_answer, safe_edit, safe_typing
 from chat.talk import build_prompt, Persona
 
@@ -138,14 +138,12 @@ async def chat_ask(message: Message, state: FSMContext) -> None:
 	stop.set()
 	await typing_task
 	await state.update_data(last_question=question, last_answers=collected)
-	# Показать панель выгрузки после получения ответов
+	# Завершающее уведомление без кнопок
 	if status:
 		try:
-			await status.edit_text(f"Готово. Получено ответов: {total}.", reply_markup=chat_controls_kb())
+			await status.edit_text("Готово!")
 		except Exception:
-			await message.answer("Готово. Вы можете выгрузить ответы или завершить диалог.", reply_markup=chat_controls_kb())
-	# Показать панель управления уже после получения ответов
-	await message.answer("Что дальше?", reply_markup=chat_controls_kb())
+			await message.answer("Готово!")
 
 @router.callback_query(lambda c: c.data in {"chat:export_answers", "chat:export_session", "chat:finish"})
 async def chat_controls(callback: CallbackQuery, state: FSMContext) -> None:
@@ -163,8 +161,12 @@ async def chat_controls(callback: CallbackQuery, state: FSMContext) -> None:
 		await callback.message.answer_document(FSInputFile(str(session.summary_md)), caption="Лог всей сессии выгружен.")
 		log_event(user_id, "auto", "export_session", path=str(session.summary_md))
 	else:
-		await state.set_state(DialogStates.ending)
-		await callback.message.answer("Завершили диалог. Что дальше?", reply_markup=finish_kb())
+		# Завершить: показываем стартовые кнопки выбора режима
+		await state.clear()
+		await callback.message.answer(
+			"Диалог завершён. Выберите способ поиска:",
+			reply_markup=mode_choice_kb(),
+		)
 	await callback.answer()
 
 @router.callback_query(F.data.startswith("ans:save:"))
