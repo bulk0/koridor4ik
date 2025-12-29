@@ -6,7 +6,7 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 
 from ..states import DialogStates
-from ..keyboards import mode_choice_kb
+from ..keyboards import mode_choice_kb, welcome_kb
 from ..services.logger import log_event
 
 router = Router()
@@ -14,12 +14,29 @@ router = Router()
 @router.message(CommandStart())
 async def cmd_start(message: Message, state: FSMContext) -> None:
 	await state.set_state(DialogStates.mode_choice)
-	await message.answer(
-		"Привет! Хочешь поговорить с кем-то конкретным или выбрать собеседников по фильтрам?",
-		reply_markup=mode_choice_kb(),
+	text = (
+		"Привет! Я помогу поговорить с синтетическими персонами из исследовательской базы.\n\n"
+		"Как это работает:\n"
+		"1) Найдём собеседника — по описанию (естественным языком) или по фильтрам (город, возраст, интересы, сервисы и др.).\n"
+		"2) Выберете одну или несколько персон.\n"
+		"3) Зададите вопрос — ответы придут от лица выбранных персон. Можно сохранять отдельные ответы и весь диалог в файлы.\n\n"
+		"Подсказки:\n"
+		"- Если предложу список примеров, можно писать просто номер (например, «3» или «3)»).\n"
+		"- Во время поиска и ответов покажу прогресс.\n\n"
+		"Нажмите «Старт», чтобы выбрать способ поиска."
 	)
+	await message.answer(text, reply_markup=welcome_kb())
 	if message.from_user:
 		log_event(message.from_user.id, "auto", "start", text="/start")
+
+@router.callback_query(F.data == "start:go")
+async def on_start_go(callback: CallbackQuery, state: FSMContext) -> None:
+	await state.set_state(DialogStates.mode_choice)
+	await callback.message.answer(
+		"Выберите способ поиска:",
+		reply_markup=mode_choice_kb(),
+	)
+	await callback.answer()
 
 @router.callback_query(F.data.startswith("mode:"))
 async def on_mode_choice(callback: CallbackQuery, state: FSMContext) -> None:
