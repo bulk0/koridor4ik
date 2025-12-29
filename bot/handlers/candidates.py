@@ -66,13 +66,15 @@ async def choose_text_candidates(message: Message, state: FSMContext) -> None:
 		"десят": 10,
 	}
 	for token in parts:
-		if token in by_idx:
-			chosen.append(by_idx[token])
+		num_only = "".join(ch for ch in token if ch.isdigit())
+		if num_only and num_only in by_idx:
+			chosen.append(by_idx[num_only])
 			continue
-		if "-" in token and all(t.isdigit() for t in token.split("-", 1)):
+		sep = "-" if "-" in token else ("–" if "–" in token else None)
+		if sep:
 			try:
-				a, b = token.split("-", 1)
-				ai, bi = int(a), int(b)
+				a, b = token.split(sep, 1)
+				ai, bi = int("".join(ch for ch in a if ch.isdigit())), int("".join(ch for ch in b if ch.isdigit()))
 				for i in range(ai, bi + 1):
 					if str(i) in by_idx:
 						chosen.append(by_idx[str(i)])

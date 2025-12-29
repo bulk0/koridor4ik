@@ -39,7 +39,6 @@ def candidates_selection_kb(personas: list[tuple[str, str]], selected: set[int],
 def chat_controls_kb() -> InlineKeyboardMarkup:
 	return InlineKeyboardMarkup(inline_keyboard=[
 		[InlineKeyboardButton(text="Выгрузить ответы", callback_data="chat:export_answers")],
-		[InlineKeyboardButton(text="Выгрузить всю сессию", callback_data="chat:export_session")],
 		[InlineKeyboardButton(text="Закончить", callback_data="chat:finish")],
 	])
 
@@ -48,16 +47,10 @@ def chat_controls_prompt_kb() -> InlineKeyboardMarkup:
 		[InlineKeyboardButton(text="Закончить", callback_data="chat:finish")],
 	])
 
-def chat_controls_pre_kb() -> InlineKeyboardMarkup:
-	# Показываем до получения ответов — без кнопки "Выгрузить ответы"
-	return InlineKeyboardMarkup(inline_keyboard=[
-		[InlineKeyboardButton(text="Завершить диалог", callback_data="chat:finish")],
-	])
-
-def chat_controls_pre_kb() -> InlineKeyboardMarkup:
+def finish_kb() -> InlineKeyboardMarkup:
 	return InlineKeyboardMarkup(inline_keyboard=[
 		[InlineKeyboardButton(text="Выгрузить всю сессию", callback_data="chat:export_session")],
-		[InlineKeyboardButton(text="Закончить", callback_data="chat:finish")],
+		[InlineKeyboardButton(text="Начать заново", callback_data="start:go")],
 	])
 
 def refine_search_kb() -> InlineKeyboardMarkup:

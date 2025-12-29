@@ -10,7 +10,7 @@ from ..states import DialogStates
 from ..services.async_llm import AsyncLLMClient
 from ..services.persona_search import PersonaSearchService
 from ..services.logger import ensure_session_files, append_question, append_answer, export_answers_file, export_single_answer, log_event
-from ..keyboards import chat_controls_kb, answer_kb
+from ..keyboards import chat_controls_kb, answer_kb, finish_kb
 from ..utils.safe_telegram import safe_answer, safe_edit, safe_typing
 from chat.talk import build_prompt, Persona
 
@@ -79,7 +79,14 @@ async def chat_ask(message: Message, state: FSMContext) -> None:
 		await message.answer("Собеседники не выбраны.")
 		return
 	user_id = message.from_user.id if message.from_user else 0
-	session = ensure_session_files(user_id)
+	# используем один и тот же идентификатор сессии на протяжении диалога
+	data_state = await state.get_data()
+	existing_sid = data_state.get("session_id")
+	if existing_sid:
+		session = ensure_session_files(user_id, existing_sid)
+	else:
+		session = ensure_session_files(user_id)
+		await state.update_data(session_id=session.session_id)
 	append_question(session, question)
 	llm = AsyncLLMClient()
 	# Прогресс/typing
@@ -144,7 +151,8 @@ async def chat_ask(message: Message, state: FSMContext) -> None:
 async def chat_controls(callback: CallbackQuery, state: FSMContext) -> None:
 	data = await state.get_data()
 	user_id = callback.from_user.id if callback.from_user else 0
-	session = ensure_session_files(user_id)
+	sid = data.get("session_id")
+	session = ensure_session_files(user_id, sid) if sid else ensure_session_files(user_id)
 	if callback.data == "chat:export_answers":
 		question = data.get("last_question", "")
 		answers = data.get("last_answers", [])
@@ -155,10 +163,8 @@ async def chat_controls(callback: CallbackQuery, state: FSMContext) -> None:
 		await callback.message.answer_document(FSInputFile(str(session.summary_md)), caption="Лог всей сессии выгружен.")
 		log_event(user_id, "auto", "export_session", path=str(session.summary_md))
 	else:
-		await callback.message.answer("Спасибо, всего доброго.\nНажмите, чтобы выгрузить лог беседы:")
-		await callback.message.answer_document(FSInputFile(str(session.summary_md)))
 		await state.set_state(DialogStates.ending)
-		log_event(user_id, "auto", "export_log", path=str(session.summary_md))
+		await callback.message.answer("Завершили диалог. Что дальше?", reply_markup=finish_kb())
 	await callback.answer()
 
 @router.callback_query(F.data.startswith("ans:save:"))
@@ -177,7 +183,8 @@ async def save_single_answer(callback: CallbackQuery, state: FSMContext) -> None
 	item = answers[idx]
 	question = data.get("last_question", "")
 	user_id = callback.from_user.id if callback.from_user else 0
-	session = ensure_session_files(user_id)
+	sid = data.get("session_id")
+	session = ensure_session_files(user_id, sid) if sid else ensure_session_files(user_id)
 	path = export_single_answer(session, question, item["title"], item["answer"])
 	await callback.message.answer_document(FSInputFile(str(path)), caption=f"Сохранён ответ: {item['title']}")
 	await callback.answer("Сохранено")

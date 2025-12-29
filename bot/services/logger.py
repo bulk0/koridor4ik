@@ -38,6 +38,7 @@ class SessionFiles:
 	user_dir: Path
 	session_dir: Path
 	summary_md: Path
+	session_id: str
 
 def ensure_session_files(user_id: int, session_id: Optional[str] = None) -> SessionFiles:
 	user_dir = RUNS_DIR / f"u_{user_id}"
@@ -48,7 +49,7 @@ def ensure_session_files(user_id: int, session_id: Optional[str] = None) -> Sess
 	summary_md = session_dir / f"summary_{sid}.md"
 	if not summary_md.exists():
 		summary_md.write_text("# Диалог с несколькими персонами (бот)\n\n", encoding="utf-8")
-	return SessionFiles(user_dir=user_dir, session_dir=session_dir, summary_md=summary_md)
+	return SessionFiles(user_dir=user_dir, session_dir=session_dir, summary_md=summary_md, session_id=sid)
 
 def append_question(session: SessionFiles, question: str) -> None:
 	with session.summary_md.open("a", encoding="utf-8") as f:

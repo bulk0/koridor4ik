@@ -9,7 +9,7 @@ from aiogram.fsm.context import FSMContext
 from ..states import DialogStates
 from ..services.async_llm import AsyncLLMClient
 from ..services.persona_search import PersonaSearchService
-from ..keyboards import candidates_selection_kb, refine_search_kb
+from ..keyboards import candidates_selection_kb, refine_search_kb, chat_controls_prompt_kb
 from ..services.logger import log_event
 from ..utils.safe_telegram import safe_answer, safe_edit, safe_typing
 
@@ -29,6 +29,43 @@ async def nl_query(message: Message, state: FSMContext) -> None:
 	if not query:
 		await message.answer("Пустой запрос. Опишите, с кем хотите поговорить.")
 		return
+	# Если ранее показывали примеры (nl_preview) — позволим выбрать по номеру или словом
+	data_prev = await state.get_data()
+	preview = data_prev.get("nl_preview") or []
+	if preview:
+		text_l = query.lower()
+		chosen = None
+		# цифра
+		num_only = "".join(ch for ch in text_l if ch.isdigit())
+		if num_only.isdigit():
+			i = int(num_only)
+			if 1 <= i <= len(preview):
+				chosen = [preview[i - 1]]
+		# русские порядковые
+		if not chosen:
+			ord_map = {"перв": 1, "втор": 2, "треть": 3, "четв": 4, "пят": 5}
+			for key, i in ord_map.items():
+				if text_l.startswith(key) and 1 <= i <= len(preview):
+					chosen = [preview[i - 1]]
+					break
+		# по фразе — простое включение
+		if not chosen and any(ch.isalpha() for ch in text_l):
+			for pid, title in preview:
+				if all(tok in title.lower() for tok in text_l.split() if len(tok) >= 3):
+					chosen = [(pid, title)]
+					break
+		if chosen:
+			await state.update_data(chosen=chosen)
+			await state.set_state(DialogStates.chat)
+			await message.answer(
+				"Введите вопрос. Примеры:\n"
+				"- Каким ИИ‑сервисом вы чаще пользуетесь и почему?\n"
+				"- Как вы ищете информацию: через ИИ или поисковик?\n",
+				reply_markup=chat_controls_prompt_kb(),
+			)
+			# очищаем превью, чтобы следующие сообщения шли в обычный поток
+			await state.update_data(nl_preview=[])
+			return
 	llm = AsyncLLMClient()
 	if message.from_user:
 		log_event(message.from_user.id, "auto", "preflight_llm")
@@ -68,8 +105,9 @@ async def nl_query(message: Message, state: FSMContext) -> None:
 		lines = ["Совпадений много. Примеры (5):"]
 		for idx, p in enumerate(personas[:5], 1):
 			lines.append(f"{idx}) {p.title}")
-		lines.append("\nМожете уточнить (город, возраст, дети, поисковик), либо нажмите «Попробовать ещё раз».")
+		lines.append("\nНапишите номер нужной персоны из примеров ИЛИ уточните (город, возраст, дети, поисковик) или нажмите «Попробовать ещё раз».")
 		await message.answer("\n".join(lines), reply_markup=refine_search_kb())
+		await state.update_data(nl_preview=[(p.persona_id, p.title) for p in personas[:5]])
 		await state.set_state(DialogStates.nl_query)
 		return
 	# Показать кандидатов для выбора
