@@ -23,7 +23,7 @@ async def cmd_start(message: Message, state: FSMContext) -> None:
 		"Подсказки:\n"
 		"- Если предложу список примеров, можно писать просто номер (например, «3» или «3)»).\n"
 		"- Во время поиска и ответов покажу прогресс.\n\n"
-		"Нажмите «Старт», чтобы выбрать способ поиска."
+		"Нажмите «Начать», чтобы выбрать способ поиска."
 	)
 	await message.answer(text, reply_markup=welcome_kb())
 	if message.from_user:

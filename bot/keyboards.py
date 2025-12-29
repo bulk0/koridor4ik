@@ -11,7 +11,7 @@ def mode_choice_kb() -> InlineKeyboardMarkup:
 
 def welcome_kb() -> InlineKeyboardMarkup:
 	return InlineKeyboardMarkup(inline_keyboard=[
-		[InlineKeyboardButton(text="Старт", callback_data="start:go")],
+		[InlineKeyboardButton(text="Начать", callback_data="start:go")],
 	])
 
 def candidates_selection_kb(personas: list[tuple[str, str]], selected: set[int], page: int, page_size: int = 5) -> InlineKeyboardMarkup:
