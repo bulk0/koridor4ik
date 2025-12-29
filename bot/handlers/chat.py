@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import asyncio
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, FSInputFile
 from aiogram.enums import ChatAction
 from aiogram.fsm.context import FSMContext
