@@ -131,6 +131,14 @@ async def chat_ask(message: Message, state: FSMContext) -> None:
 	stop.set()
 	await typing_task
 	await state.update_data(last_question=question, last_answers=collected)
+	# Показать панель выгрузки после получения ответов
+	if status:
+		try:
+			await status.edit_text(f"Готово. Получено ответов: {total}.", reply_markup=chat_controls_kb())
+		except Exception:
+			await message.answer("Готово. Вы можете выгрузить ответы или завершить диалог.", reply_markup=chat_controls_kb())
+	# Показать панель управления уже после получения ответов
+	await message.answer("Что дальше?", reply_markup=chat_controls_kb())
 
 @router.callback_query(lambda c: c.data in {"chat:export_answers", "chat:export_session", "chat:finish"})
 async def chat_controls(callback: CallbackQuery, state: FSMContext) -> None:

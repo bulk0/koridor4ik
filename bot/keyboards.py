@@ -38,6 +38,23 @@ def chat_controls_kb() -> InlineKeyboardMarkup:
 		[InlineKeyboardButton(text="Закончить", callback_data="chat:finish")],
 	])
 
+def chat_controls_prompt_kb() -> InlineKeyboardMarkup:
+	return InlineKeyboardMarkup(inline_keyboard=[
+		[InlineKeyboardButton(text="Закончить", callback_data="chat:finish")],
+	])
+
+def chat_controls_pre_kb() -> InlineKeyboardMarkup:
+	# Показываем до получения ответов — без кнопки "Выгрузить ответы"
+	return InlineKeyboardMarkup(inline_keyboard=[
+		[InlineKeyboardButton(text="Завершить диалог", callback_data="chat:finish")],
+	])
+
+def chat_controls_pre_kb() -> InlineKeyboardMarkup:
+	return InlineKeyboardMarkup(inline_keyboard=[
+		[InlineKeyboardButton(text="Выгрузить всю сессию", callback_data="chat:export_session")],
+		[InlineKeyboardButton(text="Закончить", callback_data="chat:finish")],
+	])
+
 def refine_search_kb() -> InlineKeyboardMarkup:
 	return InlineKeyboardMarkup(inline_keyboard=[
 		[InlineKeyboardButton(text="Попробовать ещё раз", callback_data="refine:retry")],

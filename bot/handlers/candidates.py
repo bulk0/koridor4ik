@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 import difflib
 
 from ..states import DialogStates
-from ..keyboards import candidates_selection_kb
+from ..keyboards import candidates_selection_kb, chat_controls_prompt_kb, chat_controls_kb
 from ..services.logger import log_event
 
 router = Router()
@@ -102,6 +102,7 @@ async def choose_text_candidates(message: Message, state: FSMContext) -> None:
 		"Введите вопрос. Примеры:\n"
 		"- Каким ИИ‑сервисом вы чаще пользуетесь и почему?\n"
 		"- Как вы ищете информацию: через ИИ или поисковик?\n",
+		reply_markup=chat_controls_prompt_kb(),
 	)
 
 @router.callback_query(F.data.startswith("page:"), DialogStates.nl_candidates)
@@ -153,6 +154,7 @@ async def on_done(callback: CallbackQuery, state: FSMContext) -> None:
 		"Введите вопрос. Примеры:\n"
 		"- Каким ИИ‑сервисом вы чаще пользуетесь и почему?\n"
 		"- Как вы ищете информацию: через ИИ или поисковик?\n",
+		reply_markup=chat_controls_prompt_kb(),
 	)
 	if callback.from_user:
 		log_event(callback.from_user.id, "auto", "candidates_done", n=len(chosen))
