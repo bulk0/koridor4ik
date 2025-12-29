@@ -11,6 +11,7 @@ from ..services.async_llm import AsyncLLMClient
 from ..services.persona_search import PersonaSearchService
 from ..services.logger import ensure_session_files, append_question, append_answer, export_answers_file, log_event
 from ..keyboards import chat_controls_kb
+from ..utils.safe_telegram import safe_answer, safe_edit, safe_typing
 from chat.talk import build_prompt, Persona
 
 router = Router()
@@ -82,15 +83,12 @@ async def chat_ask(message: Message, state: FSMContext) -> None:
 	append_question(session, question)
 	llm = AsyncLLMClient()
 	# Прогресс/typing
-	status = await message.answer("Готовлю ответы… 0/?")
+	status = await safe_answer(message, "Готовлю ответы… 0/?")
 	import asyncio
 	stop = asyncio.Event()
 	async def typing_loop():
 		while not stop.is_set():
-			try:
-				await message.bot.send_chat_action(message.chat.id, ChatAction.TYPING)
-			except Exception:
-				pass
+			await safe_typing(message)
 			await asyncio.sleep(4)
 	typing_task = asyncio.create_task(typing_loop())
 	# Получаем профили синхронно в пуле (чтобы собрать build_prompt)
@@ -107,7 +105,8 @@ async def chat_ask(message: Message, state: FSMContext) -> None:
 	collected = []
 	done = 0
 	total = len(personas)
-	await status.edit_text(f"Готовлю ответы… {done}/{total}")
+	if status:
+		await safe_edit(status, f"Готовлю ответы… {done}/{total}")
 	async def one_answer(p: Persona):
 		system, user = build_prompt(p.profile_md, question)
 		try:
@@ -126,10 +125,8 @@ async def chat_ask(message: Message, state: FSMContext) -> None:
 		await message.answer(f"— {p.title} —\n{answer}")
 		collected.append({"title": p.title, "answer": answer})
 		done += 1
-		try:
-			await status.edit_text(f"Готовлю ответы… {done}/{total}")
-		except Exception:
-			pass
+		if status:
+			await safe_edit(status, f"Готовлю ответы… {done}/{total}")
 	stop.set()
 	await typing_task
 	await state.update_data(last_question=question, last_answers=collected)
