@@ -170,7 +170,8 @@ async def chat_controls(callback: CallbackQuery, state: FSMContext) -> None:
 		await callback.message.answer_document(FSInputFile(str(session.summary_md)), caption="📦 Весь диалог сохранён.")
 		log_event(user_id, "auto", "export_session", path=str(session.summary_md))
 	elif callback.data == "chat:continue":
-		# Продолжить — просим ввести следующий вопрос
+		# Продолжить — устанавливаем состояние chat и просим ввести вопрос
+		await state.set_state(DialogStates.chat)
 		await callback.message.answer(
 			"Введите следующий вопрос.",
 			reply_markup=chat_controls_kb(),

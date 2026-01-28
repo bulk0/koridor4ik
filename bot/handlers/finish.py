@@ -32,12 +32,4 @@ async def _send_finish_message(message: Message, state: FSMContext) -> None:
 async def on_finish_cmd(message: Message, state: FSMContext) -> None:
 	await _send_finish_message(message, state)
 
-@router.message()
-async def on_finish_text(message: Message, state: FSMContext) -> None:
-	text = (message.text or "").strip().lower()
-	if text in {"все", "всё", "закончить", "стоп", "выход"}:
-		await _send_finish_message(message, state)
-		return
-	# иначе пропускаем — пусть обработают другие роутеры/состояния
-
 
