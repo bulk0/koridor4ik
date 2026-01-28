@@ -13,6 +13,7 @@ router = Router()
 @router.callback_query(F.data.startswith("finish:"))
 async def on_finish_callback(callback: CallbackQuery, state: FSMContext) -> None:
 	await state.clear()
+	await state.set_state(DialogStates.mode_choice)
 	await callback.message.answer(
 		"Диалог завершён. Спасибо!\n\n"
 		"Нажмите /start или выберите способ поиска, чтобы начать заново.",
@@ -22,6 +23,7 @@ async def on_finish_callback(callback: CallbackQuery, state: FSMContext) -> None
 
 async def _send_finish_message(message: Message, state: FSMContext) -> None:
 	await state.clear()
+	await state.set_state(DialogStates.mode_choice)
 	await message.answer(
 		"Диалог завершён. Спасибо!\n\n"
 		"Нажмите /start или выберите способ поиска, чтобы начать заново.",

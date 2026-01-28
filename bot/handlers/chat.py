@@ -179,6 +179,7 @@ async def chat_controls(callback: CallbackQuery, state: FSMContext) -> None:
 	else:
 		# Завершить: показываем стартовые кнопки выбора режима
 		await state.clear()
+		await state.set_state(DialogStates.mode_choice)
 		await callback.message.answer(
 			"Диалог завершён. Спасибо!\n\n"
 			"Нажмите /start или выберите способ поиска, чтобы начать заново.",
