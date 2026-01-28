@@ -6,18 +6,24 @@ from aiogram.fsm.context import FSMContext
 import difflib
 
 from ..states import DialogStates
-from ..keyboards import candidates_selection_kb, chat_controls_prompt_kb, chat_controls_kb
+from ..keyboards import candidates_selection_kb, format_candidates_text, chat_controls_prompt_kb, chat_controls_kb
 from ..services.logger import log_event
 
 router = Router()
 
 async def _refresh_candidates(message: Message, state: FSMContext) -> None:
+	"""Обновляет сообщение со списком кандидатов (текст + клавиатура)."""
 	data = await state.get_data()
 	personas = data.get("nl_personas") or data.get("fl_personas") or []
 	page = int(data.get("cand_page", 0))
 	selected = set(data.get("cand_selected") or [])
+	text = format_candidates_text(personas, selected=selected, page=page, page_size=5)
 	kb = candidates_selection_kb(personas, selected=selected, page=page, page_size=5)
-	await message.edit_reply_markup(reply_markup=kb)
+	try:
+		await message.edit_text(text, reply_markup=kb)
+	except Exception:
+		# Если текст не изменился, Telegram выдаст ошибку — игнорируем
+		await message.edit_reply_markup(reply_markup=kb)
 
 def _select_by_phrase_text(candidates: list[tuple[str, str]], phrase: str) -> list[tuple[str, str]]:
 	phrase_l = phrase.lower()

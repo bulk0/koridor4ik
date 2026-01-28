@@ -7,7 +7,7 @@ from aiogram.fsm.context import FSMContext
 
 from ..states import DialogStates
 from ..services.persona_search import PersonaSearchService
-from ..keyboards import refine_search_kb
+from ..keyboards import refine_search_kb, candidates_selection_kb, format_candidates_text
 from ..services.logger import log_event
 
 router = Router()
@@ -196,13 +196,15 @@ async def filter_collect(message: Message, state: FSMContext) -> None:
 			log_event(message.from_user.id, "auto", "filter_search_empty", include_all=include_all, include_any=include_any, exclude=exclude)
 		return
 	
-	lines = [f"Найдено подходящих персон: {n}. Примеры:"]
-	for i, p in enumerate(personas[:5], 1):
-		lines.append(f"{i}) {p.title}")
-	lines.append("\nНапишите номера (например: 1,3-5) или уточните запрос.")
-	await state.update_data(fl_personas=[(p.persona_id, p.title) for p in personas])
+	# Показываем окно с чекбоксами для выбора персон
+	personas_data = [(p.persona_id, p.title) for p in personas]
+	await state.update_data(fl_personas=personas_data, cand_page=0, cand_selected=[])
 	await state.set_state(DialogStates.filter_candidates)
-	await message.answer("\n".join(lines), reply_markup=refine_search_kb())
+	
+	text = format_candidates_text(personas_data, selected=set(), page=0, page_size=5)
+	text = f"Найдено подходящих персон: {n}.\n\n{text}"
+	kb = candidates_selection_kb(personas_data, selected=set(), page=0, page_size=5)
+	await message.answer(text, reply_markup=kb)
 	if message.from_user:
 		log_event(message.from_user.id, "auto", "filter_search_ok", n_candidates=n)
 

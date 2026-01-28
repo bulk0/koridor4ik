@@ -15,13 +15,22 @@ def welcome_kb() -> InlineKeyboardMarkup:
 	])
 
 def candidates_selection_kb(personas: list[tuple[str, str]], selected: set[int], page: int, page_size: int = 5) -> InlineKeyboardMarkup:
+	"""
+	Клавиатура для выбора персон. Кнопки содержат только номер и галочку,
+	полные названия выводятся в тексте сообщения.
+	"""
 	start = page * page_size
 	end = start + page_size
 	chunk = personas[start:end]
 	rows = []
+	# Кнопки выбора в одну строку (компактно)
+	select_row = []
 	for i, (_, title) in enumerate(chunk, start=start + 1):
-		mark = "✅" if i in selected else "◻️"
-		rows.append([InlineKeyboardButton(text=f"{mark} {i}) {title[:60]}", callback_data=f"pick:{i}")])
+		mark = "✅" if i in selected else str(i)
+		select_row.append(InlineKeyboardButton(text=mark, callback_data=f"pick:{i}"))
+	if select_row:
+		rows.append(select_row)
+	# Навигация
 	nav = []
 	if page > 0:
 		nav.append(InlineKeyboardButton(text="← Назад", callback_data=f"page:{page-1}"))
@@ -35,6 +44,20 @@ def candidates_selection_kb(personas: list[tuple[str, str]], selected: set[int],
 	])
 	rows.append([InlineKeyboardButton(text="Завершить диалог", callback_data="finish:dialog")])
 	return InlineKeyboardMarkup(inline_keyboard=rows)
+
+def format_candidates_text(personas: list[tuple[str, str]], selected: set[int], page: int, page_size: int = 5) -> str:
+	"""Форматирует текст со списком персон для текущей страницы."""
+	start = page * page_size
+	end = start + page_size
+	chunk = personas[start:end]
+	lines = ["Выберите собеседников (нажимайте на номера, затем «Готово»):\n"]
+	for i, (_, title) in enumerate(chunk, start=start + 1):
+		mark = "✅" if i in selected else "◻️"
+		lines.append(f"{mark} {i}) {title}")
+	total_pages = (len(personas) + page_size - 1) // page_size
+	if total_pages > 1:
+		lines.append(f"\nСтраница {page + 1} из {total_pages}")
+	return "\n".join(lines)
 
 def chat_controls_kb() -> InlineKeyboardMarkup:
 	return InlineKeyboardMarkup(inline_keyboard=[

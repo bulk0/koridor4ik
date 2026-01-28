@@ -10,7 +10,7 @@ from aiogram.fsm.context import FSMContext
 from ..states import DialogStates
 from ..services.async_llm import AsyncLLMClient
 from ..services.persona_search import PersonaSearchService
-from ..keyboards import candidates_selection_kb, refine_search_kb, chat_controls_prompt_kb
+from ..keyboards import candidates_selection_kb, format_candidates_text, refine_search_kb, chat_controls_prompt_kb
 from ..services.logger import log_event
 from ..utils.safe_telegram import safe_answer, safe_edit, safe_typing
 
@@ -118,37 +118,22 @@ async def nl_query(message: Message, state: FSMContext) -> None:
 		if message.from_user:
 			log_event(message.from_user.id, "auto", "nl_search_empty", query=query)
 		return
-	# Если много совпадений — показываем 5 случайных примеров и просим уточнить/выбрать номер
-	if len(personas) >= 10:
-		# Выбираем 5 случайных персон для показа
-		sample_personas = random.sample(personas, min(5, len(personas)))
-		lines = [f"Совпадений много ({len(personas)}). Показываю 5 случайных примеров:"]
-		for idx, p in enumerate(sample_personas, 1):
-			lines.append(f"{idx}) {p.title}")
-		lines.append(
-			"\nНапишите номер персоны (1–5), несколько номеров через запятую (1, 3, 5) "
-			"ИЛИ уточните запрос (город, возраст, дети, поисковик)."
-		)
-		await safe_answer(message, "\n".join(lines), reply_markup=refine_search_kb())
-		# сохраняем только показанные 5, чтобы номера соответствовали
-		await state.update_data(nl_preview=[(p.persona_id, p.title) for p in sample_personas])
-		await state.set_state(DialogStates.nl_query)
-		return
-	# Показать кандидатов для выбора
-	await state.update_data(nl_personas=[(p.persona_id, p.title) for p in personas], cand_page=0, cand_selected=[])
+	# Показываем окно с чекбоксами для любого количества персон > 5
+	# (для <= 5 тоже показываем, чтобы был единый UX)
+	personas_data = [(p.persona_id, p.title) for p in personas]
+	await state.update_data(nl_personas=personas_data, cand_page=0, cand_selected=[])
 	await state.set_state(DialogStates.nl_candidates)
 	if status:
 		await safe_edit(status, f"Найдено персон: {len(personas)}. Показываю список…")
-	await _show_candidates_page(message, personas, page=0, selected=set())
+	await _show_candidates_page(message, personas_data, page=0, selected=set())
 	if message.from_user:
 		log_event(message.from_user.id, "auto", "nl_search_ok", query=query, n_candidates=len(personas))
 
-async def _show_candidates_page(message: Message, personas, page: int, selected: set[int]) -> None:
-	kb = candidates_selection_kb([(p.persona_id, p.title) for p in personas], selected=selected, page=page, page_size=5)
-	await message.answer(
-		"Выберите собеседников (нажимайте на пункты, затем «Готово»). Можно также написать краткое описание в ответ.",
-		reply_markup=kb,
-	)
+async def _show_candidates_page(message: Message, personas: list[tuple[str, str]], page: int, selected: set[int]) -> None:
+	"""Показывает страницу кандидатов с полными названиями в тексте."""
+	text = format_candidates_text(personas, selected=selected, page=page, page_size=5)
+	kb = candidates_selection_kb(personas, selected=selected, page=page, page_size=5)
+	await message.answer(text, reply_markup=kb)
 
 # Коллбеки refine:* обрабатываются в handlers/refine.py
 
