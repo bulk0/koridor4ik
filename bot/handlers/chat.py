@@ -150,7 +150,7 @@ async def chat_ask(message: Message, state: FSMContext) -> None:
 		reply_markup=after_answers_kb(),
 	)
 
-@router.callback_query(lambda c: c.data in {"chat:export_answers", "chat:export_session", "chat:finish", "chat:continue"})
+@router.callback_query(F.data.in_({"chat:export_answers", "chat:export_session", "chat:finish", "chat:continue"}))
 async def chat_controls(callback: CallbackQuery, state: FSMContext) -> None:
 	data = await state.get_data()
 	user_id = callback.from_user.id if callback.from_user else 0
