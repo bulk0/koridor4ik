@@ -84,9 +84,18 @@ def refine_search_kb() -> InlineKeyboardMarkup:
 	])
 
 def answer_kb(idx: int) -> InlineKeyboardMarkup:
+	"""Клавиатура под каждым отдельным ответом персоны."""
 	return InlineKeyboardMarkup(inline_keyboard=[
-		[InlineKeyboardButton(text="Сохранить этот ответ", callback_data=f"ans:save:{idx}")],
-		[InlineKeyboardButton(text="Закончить", callback_data="chat:finish")],
+		[InlineKeyboardButton(text="💾 Сохранить этот ответ", callback_data=f"ans:save:{idx}")],
+	])
+
+def after_answers_kb() -> InlineKeyboardMarkup:
+	"""Клавиатура после всех ответов персон — для выгрузки и продолжения."""
+	return InlineKeyboardMarkup(inline_keyboard=[
+		[InlineKeyboardButton(text="📥 Сохранить все ответы на вопрос", callback_data="chat:export_answers")],
+		[InlineKeyboardButton(text="📦 Сохранить весь диалог", callback_data="chat:export_session")],
+		[InlineKeyboardButton(text="❓ Задать ещё вопрос", callback_data="chat:continue")],
+		[InlineKeyboardButton(text="🏁 Закончить", callback_data="chat:finish")],
 	])
 
 

@@ -10,7 +10,7 @@ from ..states import DialogStates
 from ..services.async_llm import AsyncLLMClient
 from ..services.persona_search import PersonaSearchService
 from ..services.logger import ensure_session_files, append_question, append_answer, export_answers_file, export_single_answer, log_event
-from ..keyboards import chat_controls_kb, answer_kb, mode_choice_kb
+from ..keyboards import chat_controls_kb, answer_kb, after_answers_kb, mode_choice_kb
 from ..utils.safe_telegram import safe_answer, safe_edit, safe_typing
 from chat.talk import build_prompt, Persona
 
@@ -138,14 +138,19 @@ async def chat_ask(message: Message, state: FSMContext) -> None:
 	stop.set()
 	await typing_task
 	await state.update_data(last_question=question, last_answers=collected)
-	# Завершающее уведомление без кнопок
+	# Показываем меню действий после всех ответов
 	if status:
 		try:
-			await status.edit_text("Готово!")
+			await status.delete()
 		except Exception:
-			await message.answer("Готово!")
+			pass
+	await message.answer(
+		"✅ Все ответы получены.\n\n"
+		"Можете сохранить ответы, задать ещё вопрос или закончить.",
+		reply_markup=after_answers_kb(),
+	)
 
-@router.callback_query(lambda c: c.data in {"chat:export_answers", "chat:export_session", "chat:finish"})
+@router.callback_query(lambda c: c.data in {"chat:export_answers", "chat:export_session", "chat:finish", "chat:continue"})
 async def chat_controls(callback: CallbackQuery, state: FSMContext) -> None:
 	data = await state.get_data()
 	user_id = callback.from_user.id if callback.from_user else 0
@@ -155,16 +160,23 @@ async def chat_controls(callback: CallbackQuery, state: FSMContext) -> None:
 		question = data.get("last_question", "")
 		answers = data.get("last_answers", [])
 		path = export_answers_file(session, question, answers)
-		await callback.message.answer_document(FSInputFile(str(path)), caption="Ответы выгружены.")
+		await callback.message.answer_document(FSInputFile(str(path)), caption="📥 Все ответы на вопрос сохранены.")
 		log_event(user_id, "auto", "export_answers", path=str(path))
 	elif callback.data == "chat:export_session":
-		await callback.message.answer_document(FSInputFile(str(session.summary_md)), caption="Лог всей сессии выгружен.")
+		await callback.message.answer_document(FSInputFile(str(session.summary_md)), caption="📦 Весь диалог сохранён.")
 		log_event(user_id, "auto", "export_session", path=str(session.summary_md))
+	elif callback.data == "chat:continue":
+		# Продолжить — просим ввести следующий вопрос
+		await callback.message.answer(
+			"Введите следующий вопрос.",
+			reply_markup=chat_controls_kb(),
+		)
 	else:
 		# Завершить: показываем стартовые кнопки выбора режима
 		await state.clear()
 		await callback.message.answer(
-			"Диалог завершён. Выберите способ поиска:",
+			"Диалог завершён. Спасибо!\n\n"
+			"Нажмите /start или выберите способ поиска, чтобы начать заново.",
 			reply_markup=mode_choice_kb(),
 		)
 	await callback.answer()
