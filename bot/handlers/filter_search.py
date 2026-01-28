@@ -47,10 +47,102 @@ def _parse_filter_dsl(text: str):
 				exclude[key.strip()] = values
 	return include_all, include_any, exclude
 
+# Словарь русских синонимов -> (category, value)
+_RUSSIAN_SYNONYMS: dict[str, tuple[str, str]] = {
+	# AI сервисы
+	"чатгпт": ("ai_services", "chatgpt"),
+	"чат-гпт": ("ai_services", "chatgpt"),
+	"чатжпт": ("ai_services", "chatgpt"),
+	"гпт": ("ai_services", "chatgpt"),
+	"опенаи": ("ai_services", "chatgpt"),
+	"openai": ("ai_services", "chatgpt"),
+	"дипсик": ("ai_services", "deepseek"),
+	"дипсика": ("ai_services", "deepseek"),
+	"дипсиком": ("ai_services", "deepseek"),
+	"дипсике": ("ai_services", "deepseek"),
+	"алиса": ("ai_services", "aliceai"),
+	"алисы": ("ai_services", "aliceai"),
+	"алисой": ("ai_services", "aliceai"),
+	"алису": ("ai_services", "aliceai"),
+	"яндекс": ("ai_services", "aliceai"),
+	"клод": ("ai_services", "claude"),
+	"клода": ("ai_services", "claude"),
+	"клодом": ("ai_services", "claude"),
+	"антропик": ("ai_services", "claude"),
+	"джемини": ("ai_services", "gemini"),
+	"гемини": ("ai_services", "gemini"),
+	"gemini": ("ai_services", "gemini"),
+	"гугл": ("ai_services", "gemini"),
+	"копайлот": ("ai_services", "copilot"),
+	"копилот": ("ai_services", "copilot"),
+	"copilot": ("ai_services", "copilot"),
+	"майкрософт": ("ai_services", "copilot"),
+	"перплексити": ("ai_services", "perplexity"),
+	"перплексити": ("ai_services", "perplexity"),
+	"мистраль": ("ai_services", "mistral"),
+	"грок": ("ai_services", "grok"),
+	"grok": ("ai_services", "grok"),
+	# Поисковики
+	"гугл": ("search_engine", "google"),
+	"google": ("search_engine", "google"),
+	"яндекс": ("search_engine", "yandex"),
+	"yandex": ("search_engine", "yandex"),
+	# Пол
+	"женщины": ("gender", "female"),
+	"женщина": ("gender", "female"),
+	"женский": ("gender", "female"),
+	"женского": ("gender", "female"),
+	"женщин": ("gender", "female"),
+	"девушки": ("gender", "female"),
+	"девушка": ("gender", "female"),
+	"девушек": ("gender", "female"),
+	"мужчины": ("gender", "male"),
+	"мужчина": ("gender", "male"),
+	"мужской": ("gender", "male"),
+	"мужского": ("gender", "male"),
+	"мужчин": ("gender", "male"),
+	"парни": ("gender", "male"),
+	"парень": ("gender", "male"),
+	"парней": ("gender", "male"),
+	# Дети
+	"дети": ("children", "True"),
+	"детьми": ("children", "True"),
+	"ребёнок": ("children", "True"),
+	"ребенок": ("children", "True"),
+	"ребёнком": ("children", "True"),
+	"ребенком": ("children", "True"),
+	# Города (популярные)
+	"москва": ("city", "москва"),
+	"москвы": ("city", "москва"),
+	"москве": ("city", "москва"),
+	"питер": ("city", "санкт-петербург"),
+	"питера": ("city", "санкт-петербург"),
+	"спб": ("city", "санкт-петербург"),
+	"петербург": ("city", "санкт-петербург"),
+	"петербурга": ("city", "санкт-петербург"),
+	"екб": ("city", "екатеринбург"),
+	"екатеринбург": ("city", "екатеринбург"),
+	"екатеринбурга": ("city", "екатеринбург"),
+	"новосибирск": ("city", "новосибирск"),
+	"новосибирска": ("city", "новосибирск"),
+	"казань": ("city", "казань"),
+	"казани": ("city", "казань"),
+}
+
+def _normalize_token(token: str) -> tuple[str, str] | None:
+	"""Пытается найти синоним для токена. Возвращает (category, value) или None."""
+	# Убираем окончания для лучшего матчинга
+	token_clean = token.rstrip("аеийоуыья")
+	for synonym, (cat, val) in _RUSSIAN_SYNONYMS.items():
+		syn_clean = synonym.rstrip("аеийоуыья")
+		if token == synonym or token_clean == syn_clean or token.startswith(syn_clean) or syn_clean.startswith(token_clean):
+			return (cat, val)
+	return None
+
 async def _parse_natural_language(text: str, catalog: dict) -> tuple[dict, dict, dict]:
 	"""
 	Умный парсер естественного языка.
-	Поддерживает: 'Москва, 35-44, без детей', 'женщины, chatgpt или aliceai'
+	Поддерживает: 'Москва, 35-44, без детей', 'женщины, chatgpt или aliceai', 'пользователи дипсика'
 	"""
 	include_all: dict[str, list[str]] = {}
 	include_any: dict[str, list[str]] = {}
@@ -65,7 +157,7 @@ async def _parse_natural_language(text: str, catalog: dict) -> tuple[dict, dict,
 	# Нормализуем текст
 	text_lower = text.lower().strip()
 	
-	# Обрабатываем исключения: "без детей", "не москва", "без chatgpt"
+	# Обрабатываем исключения: "без детей", "не москва", "без chatgpt", "без дипсика"
 	exclude_patterns = [
 		r"без\s+(\S+)",
 		r"не\s+(\S+)",
@@ -78,11 +170,17 @@ async def _parse_natural_language(text: str, catalog: dict) -> tuple[dict, dict,
 			if token in value_to_cat:
 				cat = value_to_cat[token]
 				exclude.setdefault(cat, []).append(token)
-			# Специальные случаи
+			# Специальные случаи для детей
 			elif token in ("детей", "детьми", "ребёнка", "ребенка"):
 				exclude.setdefault("children", []).append("True")
+			else:
+				# Проверяем синонимы
+				synonym_match = _normalize_token(token)
+				if synonym_match:
+					cat, val = synonym_match
+					exclude.setdefault(cat, []).append(val)
 	
-	# Обрабатываем "или" конструкции: "chatgpt или aliceai"
+	# Обрабатываем "или" конструкции: "chatgpt или aliceai", "дипсик или алиса"
 	or_pattern = r"(\S+)\s+или\s+(\S+)"
 	for match in re.finditer(or_pattern, text_lower):
 		val1, val2 = match.group(1).strip(",.;"), match.group(2).strip(",.;")
@@ -90,6 +188,12 @@ async def _parse_natural_language(text: str, catalog: dict) -> tuple[dict, dict,
 			if val in value_to_cat:
 				cat = value_to_cat[val]
 				include_any.setdefault(cat, []).append(val)
+			else:
+				# Проверяем синонимы
+				synonym_match = _normalize_token(val)
+				if synonym_match:
+					cat, normalized_val = synonym_match
+					include_any.setdefault(cat, []).append(normalized_val)
 	
 	# Разбиваем на токены (убираем уже обработанные конструкции)
 	cleaned = text_lower
@@ -100,7 +204,7 @@ async def _parse_natural_language(text: str, catalog: dict) -> tuple[dict, dict,
 	
 	for token in tokens:
 		# Пропускаем служебные слова
-		if token in ("и", "с", "в", "на", "из", "для", "по", "а", "но", "же", "ли"):
+		if token in ("и", "с", "в", "на", "из", "для", "по", "а", "но", "же", "ли", "кто", "который", "которые", "пользователи", "пользователь", "люди", "человек"):
 			continue
 		
 		# Прямое совпадение в каталоге
@@ -112,24 +216,24 @@ async def _parse_natural_language(text: str, catalog: dict) -> tuple[dict, dict,
 			include_all.setdefault(cat, []).append(token)
 			continue
 		
-		# Синонимы для gender
-		if token in ("женщины", "женщина", "женский", "женск", "девушки", "девушка"):
-			include_all.setdefault("gender", []).append("female")
-		elif token in ("мужчины", "мужчина", "мужской", "мужск", "парни", "парень"):
-			include_all.setdefault("gender", []).append("male")
-		
-		# Синонимы для children
-		elif token in ("дети", "ребёнок", "ребенок", "есть_дети"):
-			include_all.setdefault("children", []).append("True")
+		# Проверяем русские синонимы
+		synonym_match = _normalize_token(token)
+		if synonym_match:
+			cat, val = synonym_match
+			if cat in include_any and val in include_any[cat]:
+				continue
+			include_all.setdefault(cat, []).append(val)
+			continue
 		
 		# Возрастные группы — прямой матч (например "35-44")
-		elif re.match(r"^\d+-\d+$", token):
+		if re.match(r"^\d+-\d+$", token):
 			include_all.setdefault("age", []).append(token)
+			continue
 		
-		# Частичный матч для городов и сервисов (начало слова)
-		else:
+		# Частичный матч для значений из каталога (начало слова, минимум 3 символа)
+		if len(token) >= 3:
 			for val, cat in value_to_cat.items():
-				if val.startswith(token) and len(token) >= 3:
+				if val.startswith(token) or token.startswith(val[:3]):
 					include_all.setdefault(cat, []).append(val)
 					break
 	
