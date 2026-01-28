@@ -10,27 +10,33 @@ from ..states import DialogStates
 
 router = Router()
 
-async def _reset_and_back_home(obj, state: FSMContext) -> None:
-	await state.clear()
-	if hasattr(obj, "answer"):
-		await obj.answer("Спасибо, всего доброго.\nНачнём заново?", reply_markup=mode_choice_kb())
-	else:
-		await obj.message.answer("Спасибо, всего доброго.\nНачнём заново?", reply_markup=mode_choice_kb())
-
 @router.callback_query(F.data.startswith("finish:"))
 async def on_finish_callback(callback: CallbackQuery, state: FSMContext) -> None:
-	await _reset_and_back_home(callback, state)
+	await state.clear()
+	await callback.message.answer(
+		"Диалог завершён. Спасибо!\n\n"
+		"Нажмите /start или выберите способ поиска, чтобы начать заново.",
+		reply_markup=mode_choice_kb(),
+	)
 	await callback.answer()
+
+async def _send_finish_message(message: Message, state: FSMContext) -> None:
+	await state.clear()
+	await message.answer(
+		"Диалог завершён. Спасибо!\n\n"
+		"Нажмите /start или выберите способ поиска, чтобы начать заново.",
+		reply_markup=mode_choice_kb(),
+	)
 
 @router.message(Command("finish"))
 async def on_finish_cmd(message: Message, state: FSMContext) -> None:
-	await _reset_and_back_home(message, state)
+	await _send_finish_message(message, state)
 
 @router.message()
 async def on_finish_text(message: Message, state: FSMContext) -> None:
 	text = (message.text or "").strip().lower()
 	if text in {"все", "всё", "закончить", "стоп", "выход"}:
-		await _reset_and_back_home(message, state)
+		await _send_finish_message(message, state)
 		return
 	# иначе пропускаем — пусть обработают другие роутеры/состояния
 
