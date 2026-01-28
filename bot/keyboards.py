@@ -52,8 +52,11 @@ def format_candidates_text(personas: list[tuple[str, str]], selected: set[int], 
 	chunk = personas[start:end]
 	lines = ["Выберите собеседников (нажимайте на номера, затем «Готово»):\n"]
 	for i, (_, title) in enumerate(chunk, start=start + 1):
-		mark = "✅" if i in selected else "◻️"
-		lines.append(f"{mark} {i}) {title}")
+		lines.append(f"{i}. {title}")
+	# Показываем выбранных
+	if selected:
+		selected_nums = sorted(selected)
+		lines.append(f"\nВыбрано: {', '.join(str(n) for n in selected_nums)}")
 	total_pages = (len(personas) + page_size - 1) // page_size
 	if total_pages > 1:
 		lines.append(f"\nСтраница {page + 1} из {total_pages}")
