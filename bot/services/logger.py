@@ -62,10 +62,12 @@ def append_answer(session: SessionFiles, persona_title: str, answer: str) -> Non
 def export_answers_file(session: SessionFiles, question: str, answers: List[Dict[str, str]]) -> Path:
 	ts = now_ts()
 	out = session.session_dir / f"answers_{ts}.md"
-	lines: List[str] = [f"# Ответы на вопрос\n\n## Вопрос\n\n{question}\n\n---\n"]
+	content = f"# Ответы на вопрос\n\n## Вопрос\n\n{question}\n\n---\n\n"
 	for item in answers:
-		lines.append(f"## Персона: {item['title']}\n\n{item['answer']}\n\n---\n")
-	out.write_text("\n".join(lines), encoding="utf-8")
+		title = item.get("title", "Неизвестная персона")
+		answer = item.get("answer", "(нет ответа)")
+		content += f"## Персона: {title}\n\n{answer}\n\n---\n\n"
+	out.write_text(content, encoding="utf-8")
 	return out
 
 def export_single_answer(session: SessionFiles, question: str, title: str, answer: str) -> Path:

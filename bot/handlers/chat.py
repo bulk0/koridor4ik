@@ -159,9 +159,13 @@ async def chat_controls(callback: CallbackQuery, state: FSMContext) -> None:
 	if callback.data == "chat:export_answers":
 		question = data.get("last_question", "")
 		answers = data.get("last_answers", [])
+		if not answers:
+			await callback.message.answer("Нет ответов для сохранения. Сначала задайте вопрос персонам.")
+			await callback.answer()
+			return
 		path = export_answers_file(session, question, answers)
-		await callback.message.answer_document(FSInputFile(str(path)), caption="📥 Все ответы на вопрос сохранены.")
-		log_event(user_id, "auto", "export_answers", path=str(path))
+		await callback.message.answer_document(FSInputFile(str(path)), caption=f"📥 Сохранено ответов: {len(answers)}")
+		log_event(user_id, "auto", "export_answers", path=str(path), n_answers=len(answers))
 	elif callback.data == "chat:export_session":
 		await callback.message.answer_document(FSInputFile(str(session.summary_md)), caption="📦 Весь диалог сохранён.")
 		log_event(user_id, "auto", "export_session", path=str(session.summary_md))
