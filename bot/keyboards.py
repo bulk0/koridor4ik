@@ -14,9 +14,16 @@ def welcome_kb() -> InlineKeyboardMarkup:
 		[InlineKeyboardButton(text="Начать", callback_data="start:go")],
 	])
 
+def _num_to_emoji(n: int) -> str:
+	"""Преобразует число в эмодзи-цифру (1-10)."""
+	emoji_digits = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
+	if 1 <= n <= 10:
+		return emoji_digits[n - 1]
+	return str(n)
+
 def candidates_selection_kb(personas: list[tuple[str, str]], selected: set[int], page: int, page_size: int = 5) -> InlineKeyboardMarkup:
 	"""
-	Клавиатура для выбора персон. Кнопки содержат только номер и галочку,
+	Клавиатура для выбора персон. Кнопки содержат эмодзи-номер или галочку,
 	полные названия выводятся в тексте сообщения.
 	"""
 	start = page * page_size
@@ -26,7 +33,7 @@ def candidates_selection_kb(personas: list[tuple[str, str]], selected: set[int],
 	# Кнопки выбора в одну строку (компактно)
 	select_row = []
 	for i, (_, title) in enumerate(chunk, start=start + 1):
-		mark = "✅" if i in selected else str(i)
+		mark = "✅" if i in selected else _num_to_emoji(i)
 		select_row.append(InlineKeyboardButton(text=mark, callback_data=f"pick:{i}"))
 	if select_row:
 		rows.append(select_row)
