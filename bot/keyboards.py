@@ -63,6 +63,7 @@ def refine_search_kb() -> InlineKeyboardMarkup:
 def answer_kb(idx: int) -> InlineKeyboardMarkup:
 	return InlineKeyboardMarkup(inline_keyboard=[
 		[InlineKeyboardButton(text="Сохранить этот ответ", callback_data=f"ans:save:{idx}")],
+		[InlineKeyboardButton(text="Закончить", callback_data="chat:finish")],
 	])
 
 

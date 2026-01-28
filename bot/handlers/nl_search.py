@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import random
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.enums import ChatAction
@@ -34,28 +35,45 @@ async def nl_query(message: Message, state: FSMContext) -> None:
 	preview = data_prev.get("nl_preview") or []
 	if preview:
 		text_l = query.lower()
-		chosen = None
-		# цифра
-		num_only = "".join(ch for ch in text_l if ch.isdigit())
-		if num_only.isdigit():
-			i = int(num_only)
-			if 1 <= i <= len(preview):
-				chosen = [preview[i - 1]]
-		# русские порядковые
+		chosen: list[tuple[str, str]] = []
+		# Парсим список номеров: "1, 2, 3" или "1,2,3" или "1-3" или "1, 3-5"
+		parts = [p.strip() for p in query.replace(" ", "").split(",") if p.strip()]
+		for token in parts:
+			if "-" in token:
+				# диапазон: 1-3
+				try:
+					a, b = token.split("-", 1)
+					for i in range(int(a), int(b) + 1):
+						if 1 <= i <= len(preview):
+							chosen.append(preview[i - 1])
+				except ValueError:
+					pass
+			elif token.isdigit():
+				i = int(token)
+				if 1 <= i <= len(preview):
+					chosen.append(preview[i - 1])
+		# русские порядковые (только если ещё не выбрали)
 		if not chosen:
 			ord_map = {"перв": 1, "втор": 2, "треть": 3, "четв": 4, "пят": 5}
 			for key, i in ord_map.items():
 				if text_l.startswith(key) and 1 <= i <= len(preview):
 					chosen = [preview[i - 1]]
 					break
-		# по фразе — простое включение
+		# по фразе — простое включение (только если ещё не выбрали и есть буквы)
 		if not chosen and any(ch.isalpha() for ch in text_l):
 			for pid, title in preview:
 				if all(tok in title.lower() for tok in text_l.split() if len(tok) >= 3):
 					chosen = [(pid, title)]
 					break
 		if chosen:
-			await state.update_data(chosen=chosen)
+			# убираем дубликаты, сохраняя порядок
+			seen = set()
+			unique_chosen = []
+			for item in chosen:
+				if item[0] not in seen:
+					seen.add(item[0])
+					unique_chosen.append(item)
+			await state.update_data(chosen=unique_chosen)
 			await state.set_state(DialogStates.chat)
 			await message.answer(
 				"Введите вопрос. Примеры:\n"
@@ -100,16 +118,20 @@ async def nl_query(message: Message, state: FSMContext) -> None:
 		if message.from_user:
 			log_event(message.from_user.id, "auto", "nl_search_empty", query=query)
 		return
-	# Если много совпадений — показываем 5 примеров и просим уточнить/выбрать номер
+	# Если много совпадений — показываем 5 случайных примеров и просим уточнить/выбрать номер
 	if len(personas) >= 10:
-		lines = ["Совпадений много. Примеры (5):"]
-		for idx, p in enumerate(personas[:5], 1):
+		# Выбираем 5 случайных персон для показа
+		sample_personas = random.sample(personas, min(5, len(personas)))
+		lines = [f"Совпадений много ({len(personas)}). Показываю 5 случайных примеров:"]
+		for idx, p in enumerate(sample_personas, 1):
 			lines.append(f"{idx}) {p.title}")
-		top_n = min(15, len(personas))
-		lines.append(f"\nНапишите номер нужной персоны (1–{top_n}) ИЛИ уточните (город, возраст, дети, поисковик) или нажмите «Попробовать ещё раз».")
+		lines.append(
+			"\nНапишите номер персоны (1–5), несколько номеров через запятую (1, 3, 5) "
+			"ИЛИ уточните запрос (город, возраст, дети, поисковик)."
+		)
 		await safe_answer(message, "\n".join(lines), reply_markup=refine_search_kb())
-		# сохраняем больше, чем показываем, чтобы можно было выбрать 6,7,… по номеру
-		await state.update_data(nl_preview=[(p.persona_id, p.title) for p in personas[:top_n]])
+		# сохраняем только показанные 5, чтобы номера соответствовали
+		await state.update_data(nl_preview=[(p.persona_id, p.title) for p in sample_personas])
 		await state.set_state(DialogStates.nl_query)
 		return
 	# Показать кандидатов для выбора

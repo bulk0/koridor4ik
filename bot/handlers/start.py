@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from aiogram import Router, F
-from aiogram.filters import CommandStart
+from aiogram.filters import CommandStart, StateFilter
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 
@@ -11,7 +11,7 @@ from ..services.logger import log_event
 
 router = Router()
 
-@router.message(CommandStart())
+@router.message(CommandStart(), StateFilter("*"))
 async def cmd_start(message: Message, state: FSMContext) -> None:
 	await state.set_state(DialogStates.mode_choice)
 	text = (
@@ -44,14 +44,24 @@ async def on_mode_choice(callback: CallbackQuery, state: FSMContext) -> None:
 			"Напишите, с кем хотите пообщаться.\nПримеры: «пользователь нейросетей в декрете», «Екатерина из Екатеринбурга».",
 		)
 	elif mode == "filters":
-		await state.set_state(DialogStates.filter_intro)
-		await callback.message.edit_text(
-			"Сейчас покажу список фильтров (ключ — значения). Выберите нужные и сформулируйте условия отбора через И/или/не.\n"
+		# Сразу переходим к сбору фильтров и показываем каталог
+		await state.set_state(DialogStates.filter_collect)
+		from ..services.persona_search import PersonaSearchService
+		_search = PersonaSearchService()
+		catalog = await _search.tags_catalog()
+		lines = ["Доступные фильтры (ключ — примеры значений):"]
+		for cat, pairs in catalog.items():
+			values = ", ".join([v for v, _ in pairs[:6]])
+			lines.append(f"• {cat}: {values}{' …' if len(pairs) > 6 else ''}")
+		lines.append(
+			"\nОпишите, кого ищете — естественным языком или через фильтры.\n"
 			"Примеры:\n"
-			"- и: city=Москва; age=35-44\n"
-			"- или: ai_services=chatgpt,aliceai\n"
-			"- не: children=True\n"
+			"• Москва, 35-44, без детей\n"
+			"• женщины, chatgpt или aliceai\n"
+			"• city=Екатеринбург; age=25-34"
 		)
+		from ..keyboards import refine_search_kb
+		await callback.message.edit_text("\n".join(lines), reply_markup=refine_search_kb())
 	if callback.from_user:
 		log_event(callback.from_user.id, "auto", "mode_choice", mode=mode)
 	await callback.answer()
