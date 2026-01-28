@@ -13,3 +13,15 @@ venv/
 env/
 *.log
 
+# Временные базы и бэкапы
+db/*_backup*.sqlite
+db/*_new_titles*.sqlite
+db/*_test*.sqlite
+
+# Медиа-файлы в корне
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
+
