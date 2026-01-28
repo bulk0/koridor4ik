@@ -100,12 +100,12 @@ async def nl_query(message: Message, state: FSMContext) -> None:
 	typing_task = asyncio.create_task(typing_loop())
 	try:
 		if status:
-			await safe_edit(status, "Ищу кандидатов (FTS)…")
+			await safe_edit(status, "Ищу кандидатов…")
 		# Новый быстрый поиск с параллельным LLM‑реранжом
 		personas = await _search.search_by_description_fast(query, llm, k_fts=40, top_k=12)
 		if not personas:
 			if status:
-				await safe_edit(status, "FTS не нашёл результатов. Пробую умный поиск по смыслу…")
+				await safe_edit(status, "Пробую умный поиск по смыслу…")
 			personas = await _search.search_by_description(query, llm, k_fts=50, top_k=15)
 	finally:
 		stop.set()
