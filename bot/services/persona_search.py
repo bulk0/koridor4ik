@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import time
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple, Any
+from typing import Any, Dict, List, Optional, Tuple
 
 from chat.talk import (
 	search_by_description_with_fallback,
@@ -43,33 +43,102 @@ class PersonaSearchService:
 		self._cache = TTLCache()
 
 	# ---------- Быстрые асинхронные версии шагов поиска ----------
-	def _infer_hard_filters(self, query: str) -> Dict[str, List[str]]:
+	def _infer_tags_from_query(self, query: str) -> Tuple[Dict[str, List[str]], Dict[str, List[str]]]:
 		"""
-		Жёсткие фильтры, выведенные по ключевым словам (до LLM), чтобы отсечь заведомо нерелевантных.
-		Пример: 'молодые девушки' -> gender=female, age in {18-24,15-34} (в зависимости от наличия в таксономии).
+		Извлекает теги из запроса на естественном языке.
+		Возвращает (include_all, include_any) — жёсткие и мягкие фильтры.
+		
+		Пример: 'айтишников из москвы' -> include_all={profession: [it], city_name: [москва]}
 		"""
 		q = query.lower()
-		res: Dict[str, List[str]] = {}
-		# Пол
+		include_all: Dict[str, List[str]] = {}
+		include_any: Dict[str, List[str]] = {}
+		
+		# === Профессии ===
+		profession_map = {
+			"it": ["айтишник", "программист", "разработчик", "it-", "айти", "девелопер", "девопс", "devops", "сисадмин", "backend", "frontend", "it специалист"],
+			"engineer": ["инженер", "конструктор", "технолог"],
+			"manager": ["руководител", "директор", "менеджер", "управленец", "начальник"],
+			"sales": ["продажник", "продавец", "менеджер по продаж"],
+			"marketing": ["маркетолог", "smm", "рекламщик", "пиарщик"],
+			"finance": ["бухгалтер", "экономист", "финансист"],
+			"legal": ["юрист", "адвокат", "нотариус"],
+			"medical": ["врач", "медик", "фельдшер", "медсестр", "доктор"],
+			"education": ["учитель", "преподаватель", "репетитор", "педагог"],
+			"student": ["студент", "аспирант", "учащийся"],
+			"homemaker": ["домохозяйк", "в декрете", "мама в декрете", "декретниц"],
+			"entrepreneur": ["предприниматель", "бизнесмен", "бизнесвумен", "владелец бизнеса"],
+			"creative": ["дизайнер", "художник", "фотограф", "архитектор"],
+			"media": ["журналист", "блогер", "видеоблогер"],
+			"hr": ["hr", "кадровик", "рекрутер", "эйчар"],
+		}
+		for prof_tag, keywords in profession_map.items():
+			if any(kw in q for kw in keywords):
+				include_all.setdefault("profession", []).append(prof_tag)
+				break
+		
+		# === Города ===
+		city_map = {
+			"москва": ["москв", "мск"],
+			"санкт-петербург": ["петербург", "питер", "спб"],
+			"екатеринбург": ["екатеринбург", "екб"],
+			"новосибирск": ["новосибирск"],
+			"казань": ["казан"],
+			"нижний новгород": ["нижний новгород", "нижн"],
+			"челябинск": ["челябинск"],
+			"самара": ["самар"],
+			"ростов-на-дону": ["ростов"],
+			"краснодар": ["краснодар"],
+			"воронеж": ["воронеж"],
+			"сочи": ["сочи"],
+			"ярославль": ["ярославл"],
+		}
+		for city_tag, keywords in city_map.items():
+			if any(kw in q for kw in keywords):
+				include_all.setdefault("city_name", []).append(city_tag)
+				break
+		
+		# === Пол ===
 		if any(w in q for w in ["девушк", "женщин", "женск", "девчонк"]):
-			res["gender"] = ["female"]
-		elif any(w in q for w in ["парн", "юнош", "мужчин", "мальчик"]):
-			res["gender"] = ["male"]
-		# Возраст (грубо)
-		if any(w in q for w in ["молод", "юн", "студент", "школьн"]):
-			# Позже скорректируем под таксономию
-			res.setdefault("age", [])
-			res["age"].extend(["18-24", "15-34"])
-		if any(w in q for w in ["подрост", "тинейдж"]):
-			res.setdefault("age", [])
-			res["age"].append("15-24")
-		if any(w in q for w in ["взросл"]):
-			res.setdefault("age", [])
-			res["age"].extend(["25-34", "35-44"])
-		# Очистка от дублей
-		for k, v in list(res.items()):
-			res[k] = list({x for x in v})
-		return res
+			include_all["gender"] = ["female"]
+		elif any(w in q for w in ["парн", "юнош", "мужчин", "мальчик", "мужик"]):
+			include_all["gender"] = ["male"]
+		
+		# === Возраст ===
+		if any(w in q for w in ["молод", "юн"]):
+			include_any.setdefault("age", []).extend(["18-24", "15-34"])
+		if any(w in q for w in ["студент"]):
+			include_any.setdefault("age", []).extend(["18-24", "15-34"])
+		if any(w in q for w in ["взросл", "средн"]):
+			include_any.setdefault("age", []).extend(["25-34", "35-44"])
+		if any(w in q for w in ["старш", "пожил"]):
+			include_any.setdefault("age", []).extend(["45-55"])
+		
+		# === AI сервисы ===
+		ai_map = {
+			"chatgpt": ["chatgpt", "чатгпт", "чат гпт", "gpt", "гпт", "openai"],
+			"aliceai": ["алис", "яндекс"],
+			"deepseek": ["дипсик", "deepseek"],
+			"gigachat": ["гигачат", "gigachat", "сбер"],
+			"claude": ["клод", "claude", "антропик"],
+			"gemini": ["джемини", "gemini", "гугл ai"],
+		}
+		for ai_tag, keywords in ai_map.items():
+			if any(kw in q for kw in keywords):
+				include_any.setdefault("ai_services", []).append(ai_tag)
+		
+		# === Дети ===
+		if any(w in q for w in ["с детьми", "с ребёнком", "с ребенком", "родител"]):
+			include_all["children"] = ["True"]
+		if any(w in q for w in ["без детей", "бездетн"]):
+			include_all["children"] = ["False"]
+		
+		# Очистка дублей
+		for d in [include_all, include_any]:
+			for k, v in list(d.items()):
+				d[k] = list(dict.fromkeys(v))
+		
+		return include_all, include_any
 
 	async def fts_candidates(self, query: str, k: int = 50) -> List[Persona]:
 		from chat.talk import fts_candidates as fts_sync
@@ -141,63 +210,64 @@ class PersonaSearchService:
 		return [p for _, p in results[:top_k]]
 
 	async def search_by_description_fast(self, query: str, llm: AsyncLLMClient, k_fts: int = 40, top_k: int = 12) -> List[Persona]:
-		key = f"nl2:{query.strip().lower()}:{k_fts}:{top_k}"
+		"""
+		Новая логика поиска:
+		1. Сначала парсим запрос и ищем по тегам (profession, city_name, gender и т.д.)
+		2. Если по тегам >= 3 результатов — возвращаем их (с LLM-реранжированием)
+		3. Если по тегам < 3 результатов — добавляем FTS + LLM маппинг
+		"""
+		key = f"nl3:{query.strip().lower()}:{k_fts}:{top_k}"
 		cached = await self._cache.get(key)
 		if isinstance(cached, list):
 			return cached  # type: ignore[return-value]
-		# Жёсткие фильтры по словам (до LLM)
-		hard = self._infer_hard_filters(query)
-		def _apply_hard_filter(personas: List[Persona]) -> List[Persona]:
-			if not hard:
-				return personas
-			# Быстрое пост-фильтрование по тегам из БД
-			from chat.talk import tags_for_persona
-			filtered: List[Persona] = []
-			for p in personas:
-				tag_map = tags_for_persona(p.persona_id)
-				ok = True
-				for cat, vals in hard.items():
-					if vals:
-						pvals = set(tag_map.get(cat, []))
-						# Для age — допускаем пересечение любого значения
-						if cat == "age":
-							if not (pvals & set(vals)):
-								ok = False
-								break
-						else:
-							# Строгое значение
-							if not pvals.intersection(set(vals)):
-								ok = False
-								break
-				if ok:
-					filtered.append(p)
-			return filtered
-		# 1) FTS
-		candidates = await self.fts_candidates(query, k=k_fts)
-		candidates = _apply_hard_filter(candidates)
-		# 2) Фолбэк
-		if not candidates:
+		
+		# 1) Парсим запрос в теги
+		include_all, include_any = self._infer_tags_from_query(query)
+		
+		candidates: List[Persona] = []
+		
+		# 2) Если есть жёсткие фильтры — ищем по тегам
+		if include_all or include_any:
+			candidates = await self.search_by_filters(include_all, include_any, {}, title_like=None, limit=100)
+		
+		# 3) Если по тегам мало результатов (< 3) — добавляем FTS
+		if len(candidates) < 3:
+			fts_hits = await self.fts_candidates(query, k=k_fts)
+			# Объединяем, избегая дублей
+			existing_ids = {p.persona_id for p in candidates}
+			for p in fts_hits:
+				if p.persona_id not in existing_ids:
+					candidates.append(p)
+					existing_ids.add(p.persona_id)
+		
+		# 4) Если всё ещё мало — пробуем LLM маппинг
+		if len(candidates) < 3:
 			mapped = await self._llm_map_description_to_filters_async(llm, query)
-			include_any: Dict[str, List[str]] = {}
+			llm_include_any: Dict[str, List[str]] = {}
 			for cat, vals in (mapped.get("tags") or {}).items():
-				include_any[str(cat)] = [str(v) for v in vals]
-			# Применяем жёсткие (AND) фильтры
-			include_all = {k: v for k, v in hard.items() if v}
-			tag_hits = await self.search_by_filters({}, include_any, {}, title_like=None, limit=400) if include_any else []
-			# Если заданы жёсткие — пересчитаем по ним
-			if include_all:
-				tag_hits = await self.search_by_filters(include_all, {}, {}, title_like=None, limit=400)
-			alt_hits: List[Persona] = []
-			for alt in (mapped.get("alt_queries") or [])[:4]:
-				alt_hits.extend(await self.fts_candidates(alt, k=max(10, k_fts // 2)))
-			combined: Dict[str, Persona] = {}
-			for p in tag_hits + alt_hits:
-				combined[p.persona_id] = p
-			candidates = list(combined.values())
-			candidates = _apply_hard_filter(candidates)
+				llm_include_any[str(cat)] = [str(v) for v in vals]
+			
+			if llm_include_any:
+				llm_hits = await self.search_by_filters({}, llm_include_any, {}, title_like=None, limit=50)
+				existing_ids = {p.persona_id for p in candidates}
+				for p in llm_hits:
+					if p.persona_id not in existing_ids:
+						candidates.append(p)
+						existing_ids.add(p.persona_id)
+			
+			# FTS по альтернативным запросам
+			for alt in (mapped.get("alt_queries") or [])[:3]:
+				alt_hits = await self.fts_candidates(alt, k=20)
+				existing_ids = {p.persona_id for p in candidates}
+				for p in alt_hits:
+					if p.persona_id not in existing_ids:
+						candidates.append(p)
+						existing_ids.add(p.persona_id)
+		
 		if not candidates:
 			return []
-		# 3) Реренж
+		
+		# 5) Реранжирование через LLM
 		ranked = await self._rerank_async(llm, query, candidates, top_k=top_k)
 		await self._cache.set(key, ranked, ttl_s=1800.0)
 		return ranked
