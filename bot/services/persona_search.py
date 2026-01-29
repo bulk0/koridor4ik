@@ -43,16 +43,32 @@ class PersonaSearchService:
 		self._cache = TTLCache()
 
 	# ---------- Быстрые асинхронные версии шагов поиска ----------
-	def _infer_tags_from_query(self, query: str) -> Tuple[Dict[str, List[str]], Dict[str, List[str]]]:
+	def _infer_tags_from_query(self, query: str) -> Tuple[Dict[str, List[str]], Dict[str, List[str]], Dict[str, List[str]]]:
 		"""
 		Извлекает теги из запроса на естественном языке.
-		Возвращает (include_all, include_any) — жёсткие и мягкие фильтры.
+		Возвращает (include_all, include_any, exclude) — жёсткие, мягкие фильтры и исключения.
 		
 		Пример: 'айтишников из москвы' -> include_all={profession: [it], city_name: [москва]}
+		Пример: 'декретницы не из москвы' -> include_all={profession: [homemaker]}, exclude={city_name: [москва]}
 		"""
+		import re
 		q = query.lower()
 		include_all: Dict[str, List[str]] = {}
 		include_any: Dict[str, List[str]] = {}
+		exclude: Dict[str, List[str]] = {}
+		
+		# === Обработка исключений: "не из москвы", "без москвы", "кроме москвы" ===
+		exclude_patterns = [
+			r"не из\s+(\S+)",
+			r"без\s+(\S+)",
+			r"кроме\s+(\S+)",
+			r"не\s+(\S+)",
+		]
+		excluded_tokens: set[str] = set()
+		for pattern in exclude_patterns:
+			for match in re.finditer(pattern, q):
+				token = match.group(1).strip(",.;:")
+				excluded_tokens.add(token)
 		
 		# === Профессии ===
 		profession_map = {
@@ -94,8 +110,13 @@ class PersonaSearchService:
 			"ярославль": ["ярославл"],
 		}
 		for city_tag, keywords in city_map.items():
+			# Проверяем, не исключён ли город
+			is_excluded = any(kw in excluded_tokens or any(kw in et for et in excluded_tokens) for kw in keywords)
 			if any(kw in q for kw in keywords):
-				include_all.setdefault("city_name", []).append(city_tag)
+				if is_excluded:
+					exclude.setdefault("city_name", []).append(city_tag)
+				else:
+					include_all.setdefault("city_name", []).append(city_tag)
 				break
 		
 		# === Пол ===
@@ -134,11 +155,11 @@ class PersonaSearchService:
 			include_all["children"] = ["False"]
 		
 		# Очистка дублей
-		for d in [include_all, include_any]:
+		for d in [include_all, include_any, exclude]:
 			for k, v in list(d.items()):
 				d[k] = list(dict.fromkeys(v))
 		
-		return include_all, include_any
+		return include_all, include_any, exclude
 
 	async def fts_candidates(self, query: str, k: int = 50) -> List[Persona]:
 		from chat.talk import fts_candidates as fts_sync
@@ -215,24 +236,30 @@ class PersonaSearchService:
 		1. Сначала парсим запрос и ищем по тегам (profession, city_name, gender и т.д.)
 		2. Если по тегам >= 3 результатов — возвращаем их (с LLM-реранжированием)
 		3. Если по тегам < 3 результатов — добавляем FTS + LLM маппинг
+		4. Результаты фильтруются по exclude-тегам
 		"""
-		key = f"nl3:{query.strip().lower()}:{k_fts}:{top_k}"
+		key = f"nl4:{query.strip().lower()}:{k_fts}:{top_k}"
 		cached = await self._cache.get(key)
 		if isinstance(cached, list):
 			return cached  # type: ignore[return-value]
 		
-		# 1) Парсим запрос в теги
-		include_all, include_any = self._infer_tags_from_query(query)
+		# 1) Парсим запрос в теги (включая exclude)
+		include_all, include_any, exclude = self._infer_tags_from_query(query)
 		
 		candidates: List[Persona] = []
+		has_strong_filters = bool(include_all) or bool(exclude)  # Есть ли жёсткие критерии
 		
-		# 2) Если есть жёсткие фильтры — ищем по тегам
-		if include_all or include_any:
-			candidates = await self.search_by_filters(include_all, include_any, {}, title_like=None, limit=100)
+		# 2) Если есть фильтры — ищем по тегам
+		if include_all or include_any or exclude:
+			candidates = await self.search_by_filters(include_all, include_any, exclude, title_like=None, limit=100)
 		
-		# 3) Если по тегам мало результатов (< 3) — добавляем FTS
-		if len(candidates) < 3:
+		# 3) Если по тегам мало результатов (< 3) И нет жёстких фильтров — добавляем FTS
+		# Если есть жёсткие фильтры (profession, city, exclude) — не добавляем мусор из FTS
+		if len(candidates) < 3 and not has_strong_filters:
 			fts_hits = await self.fts_candidates(query, k=k_fts)
+			# Применяем exclude-фильтры к FTS результатам
+			if exclude:
+				fts_hits = await self._apply_exclude_filter(fts_hits, exclude)
 			# Объединяем, избегая дублей
 			existing_ids = {p.persona_id for p in candidates}
 			for p in fts_hits:
@@ -248,29 +275,53 @@ class PersonaSearchService:
 				llm_include_any[str(cat)] = [str(v) for v in vals]
 			
 			if llm_include_any:
-				llm_hits = await self.search_by_filters({}, llm_include_any, {}, title_like=None, limit=50)
+				# Объединяем с нашими exclude
+				llm_hits = await self.search_by_filters({}, llm_include_any, exclude, title_like=None, limit=50)
 				existing_ids = {p.persona_id for p in candidates}
 				for p in llm_hits:
 					if p.persona_id not in existing_ids:
 						candidates.append(p)
 						existing_ids.add(p.persona_id)
 			
-			# FTS по альтернативным запросам
-			for alt in (mapped.get("alt_queries") or [])[:3]:
-				alt_hits = await self.fts_candidates(alt, k=20)
-				existing_ids = {p.persona_id for p in candidates}
-				for p in alt_hits:
-					if p.persona_id not in existing_ids:
-						candidates.append(p)
-						existing_ids.add(p.persona_id)
+			# FTS по альтернативным запросам (только если нет жёстких фильтров)
+			if not has_strong_filters:
+				for alt in (mapped.get("alt_queries") or [])[:3]:
+					alt_hits = await self.fts_candidates(alt, k=20)
+					if exclude:
+						alt_hits = await self._apply_exclude_filter(alt_hits, exclude)
+					existing_ids = {p.persona_id for p in candidates}
+					for p in alt_hits:
+						if p.persona_id not in existing_ids:
+							candidates.append(p)
+							existing_ids.add(p.persona_id)
 		
 		if not candidates:
 			return []
 		
-		# 5) Реранжирование через LLM
-		ranked = await self._rerank_async(llm, query, candidates, top_k=top_k)
+		# 5) Реранжирование через LLM (ограничиваем top_k, чтобы не возвращать лишнее)
+		# Если по тегам нашли достаточно — ограничиваем количеством найденного
+		effective_top_k = min(top_k, len(candidates)) if has_strong_filters else top_k
+		ranked = await self._rerank_async(llm, query, candidates, top_k=effective_top_k)
 		await self._cache.set(key, ranked, ttl_s=1800.0)
 		return ranked
+	
+	async def _apply_exclude_filter(self, personas: List[Persona], exclude: Dict[str, List[str]]) -> List[Persona]:
+		"""Фильтрует персон по exclude-тегам."""
+		if not exclude:
+			return personas
+		from chat.talk import tags_for_persona
+		filtered: List[Persona] = []
+		for p in personas:
+			tag_map = tags_for_persona(p.persona_id)
+			ok = True
+			for cat, vals in exclude.items():
+				pvals = set(tag_map.get(cat, []))
+				if pvals.intersection(set(vals)):
+					ok = False
+					break
+			if ok:
+				filtered.append(p)
+		return filtered
 
 	async def search_by_description(self, query: str, llm: AsyncLLMClient, k_fts: int = 50, top_k: int = 15) -> List[Persona]:
 		key = f"nl:{query.strip().lower()}:{k_fts}:{top_k}"
