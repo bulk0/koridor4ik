@@ -48,8 +48,11 @@ class PersonaSearchService:
 		Извлекает теги из запроса на естественном языке.
 		Возвращает (include_all, include_any, exclude) — жёсткие, мягкие фильтры и исключения.
 		
-		Пример: 'айтишников из москвы' -> include_all={profession: [it], city_name: [москва]}
-		Пример: 'декретницы не из москвы' -> include_all={profession: [homemaker]}, exclude={city_name: [москва]}
+		Примеры:
+		- 'айтишников из москвы' -> include_all={profession: [it], city_name: [москва]}
+		- 'декретницы не из москвы' -> include_all={profession: [homemaker]}, exclude={city_name: [москва]}
+		- 'не студенты' -> exclude={profession: [student]}
+		- 'без chatgpt' -> exclude={ai_services: [chatgpt]}
 		"""
 		import re
 		q = query.lower()
@@ -57,7 +60,7 @@ class PersonaSearchService:
 		include_any: Dict[str, List[str]] = {}
 		exclude: Dict[str, List[str]] = {}
 		
-		# === Обработка исключений: "не из москвы", "без москвы", "кроме москвы" ===
+		# === Обработка исключений: "не из москвы", "без москвы", "кроме москвы", "не студенты" ===
 		exclude_patterns = [
 			r"не из\s+(\S+)",
 			r"без\s+(\S+)",
@@ -69,6 +72,27 @@ class PersonaSearchService:
 			for match in re.finditer(pattern, q):
 				token = match.group(1).strip(",.;:")
 				excluded_tokens.add(token)
+		
+		def is_keyword_excluded(keywords: List[str]) -> bool:
+			"""Проверяет, упоминается ли ключевое слово в контексте исключения."""
+			for kw in keywords:
+				# Прямое совпадение с токеном исключения
+				if kw in excluded_tokens:
+					return True
+				# Частичное совпадение (москв -> москвы)
+				for et in excluded_tokens:
+					if kw in et or et in kw:
+						return True
+			return False
+		
+		def add_tag(category: str, tag: str, keywords: List[str], is_strict: bool = True) -> None:
+			"""Добавляет тег в include или exclude в зависимости от контекста."""
+			if is_keyword_excluded(keywords):
+				exclude.setdefault(category, []).append(tag)
+			elif is_strict:
+				include_all.setdefault(category, []).append(tag)
+			else:
+				include_any.setdefault(category, []).append(tag)
 		
 		# === Профессии ===
 		profession_map = {
@@ -90,7 +114,7 @@ class PersonaSearchService:
 		}
 		for prof_tag, keywords in profession_map.items():
 			if any(kw in q for kw in keywords):
-				include_all.setdefault("profession", []).append(prof_tag)
+				add_tag("profession", prof_tag, keywords, is_strict=True)
 				break
 		
 		# === Города ===
@@ -110,25 +134,24 @@ class PersonaSearchService:
 			"ярославль": ["ярославл"],
 		}
 		for city_tag, keywords in city_map.items():
-			# Проверяем, не исключён ли город
-			is_excluded = any(kw in excluded_tokens or any(kw in et for et in excluded_tokens) for kw in keywords)
 			if any(kw in q for kw in keywords):
-				if is_excluded:
-					exclude.setdefault("city_name", []).append(city_tag)
-				else:
-					include_all.setdefault("city_name", []).append(city_tag)
+				add_tag("city_name", city_tag, keywords, is_strict=True)
 				break
 		
 		# === Пол ===
-		if any(w in q for w in ["девушк", "женщин", "женск", "девчонк"]):
-			include_all["gender"] = ["female"]
-		elif any(w in q for w in ["парн", "юнош", "мужчин", "мальчик", "мужик"]):
-			include_all["gender"] = ["male"]
+		gender_map = {
+			"female": ["девушк", "женщин", "женск", "девчонк"],
+			"male": ["парн", "юнош", "мужчин", "мальчик", "мужик"],
+		}
+		for gender_tag, keywords in gender_map.items():
+			if any(kw in q for kw in keywords):
+				add_tag("gender", gender_tag, keywords, is_strict=True)
+				break
 		
 		# === Возраст ===
 		if any(w in q for w in ["молод", "юн"]):
 			include_any.setdefault("age", []).extend(["18-24", "15-34"])
-		if any(w in q for w in ["студент"]):
+		if any(w in q for w in ["студент"]) and "profession" not in include_all and "profession" not in exclude:
 			include_any.setdefault("age", []).extend(["18-24", "15-34"])
 		if any(w in q for w in ["взросл", "средн"]):
 			include_any.setdefault("age", []).extend(["25-34", "35-44"])
@@ -146,7 +169,7 @@ class PersonaSearchService:
 		}
 		for ai_tag, keywords in ai_map.items():
 			if any(kw in q for kw in keywords):
-				include_any.setdefault("ai_services", []).append(ai_tag)
+				add_tag("ai_services", ai_tag, keywords, is_strict=False)
 		
 		# === Дети ===
 		if any(w in q for w in ["с детьми", "с ребёнком", "с ребенком", "родител"]):
