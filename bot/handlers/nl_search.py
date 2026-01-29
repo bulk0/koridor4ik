@@ -98,12 +98,15 @@ async def nl_query(message: Message, state: FSMContext) -> None:
 			await safe_typing(message)
 			await asyncio.sleep(4)
 	typing_task = asyncio.create_task(typing_loop())
+	search_note: str | None = None
 	try:
 		if status:
 			await safe_edit(status, "Ищу кандидатов…")
 		# Новый быстрый поиск с параллельным LLM‑реранжом
-		# top_k=15 — максимум результатов, но реально вернётся меньше если по тегам мало
-		personas = await _search.search_by_description_fast(query, llm, k_fts=40, top_k=15)
+		# Возвращает SearchResult с пояснением, если фильтры были ослаблены
+		search_result = await _search.search_by_description_fast(query, llm, k_fts=40, top_k=15)
+		personas = list(search_result.personas)
+		search_note = search_result.note
 		if not personas:
 			if status:
 				await safe_edit(status, "Пробую умный поиск по смыслу…")
@@ -119,6 +122,9 @@ async def nl_query(message: Message, state: FSMContext) -> None:
 		if message.from_user:
 			log_event(message.from_user.id, "auto", "nl_search_empty", query=query)
 		return
+	# Показываем пояснение, если фильтры были ослаблены
+	if search_note:
+		await message.answer(search_note)
 	# Показываем окно с чекбоксами для любого количества персон > 5
 	# (для <= 5 тоже показываем, чтобы был единый UX)
 	personas_data = [(p.persona_id, p.title) for p in personas]
@@ -128,7 +134,7 @@ async def nl_query(message: Message, state: FSMContext) -> None:
 		await safe_edit(status, f"Найдено персон: {len(personas)}. Показываю список…")
 	await _show_candidates_page(message, personas_data, page=0, selected=set())
 	if message.from_user:
-		log_event(message.from_user.id, "auto", "nl_search_ok", query=query, n_candidates=len(personas))
+		log_event(message.from_user.id, "auto", "nl_search_ok", query=query, n_candidates=len(personas), note=search_note)
 
 async def _show_candidates_page(message: Message, personas: list[tuple[str, str]], page: int, selected: set[int]) -> None:
 	"""Показывает страницу кандидатов с полными названиями в тексте."""

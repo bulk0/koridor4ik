@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
 from chat.talk import (
@@ -13,6 +13,21 @@ from chat.talk import (
 	Persona,
 )
 from .async_llm import AsyncLLMClient
+
+@dataclass
+class SearchResult:
+	"""Результат поиска с пояснением для пользователя."""
+	personas: List[Persona]
+	note: Optional[str] = None  # Пояснение, если фильтры были ослаблены
+	
+	def __iter__(self):
+		return iter(self.personas)
+	
+	def __len__(self):
+		return len(self.personas)
+	
+	def __bool__(self):
+		return bool(self.personas)
 
 @dataclass
 class TTLCacheEntry:
@@ -253,24 +268,26 @@ class PersonaSearchService:
 		results.sort(key=lambda x: x[0], reverse=True)
 		return [p for _, p in results[:top_k]]
 
-	async def search_by_description_fast(self, query: str, llm: AsyncLLMClient, k_fts: int = 40, top_k: int = 12) -> List[Persona]:
+	async def search_by_description_fast(self, query: str, llm: AsyncLLMClient, k_fts: int = 40, top_k: int = 15) -> SearchResult:
 		"""
 		Новая логика поиска:
 		1. Сначала парсим запрос и ищем по тегам (profession, city_name, gender и т.д.)
 		2. Если по тегам >= 3 результатов — возвращаем их (с LLM-реранжированием)
 		3. Если по тегам < 3 результатов — добавляем FTS + LLM маппинг
 		4. Результаты фильтруются по exclude-тегам
+		5. Возвращает SearchResult с пояснением, если фильтры были ослаблены
 		"""
-		key = f"nl4:{query.strip().lower()}:{k_fts}:{top_k}"
+		key = f"nl5:{query.strip().lower()}:{k_fts}:{top_k}"
 		cached = await self._cache.get(key)
-		if isinstance(cached, list):
-			return cached  # type: ignore[return-value]
+		if isinstance(cached, SearchResult):
+			return cached
 		
 		# 1) Парсим запрос в теги (включая exclude)
 		include_all, include_any, exclude = self._infer_tags_from_query(query)
 		
 		candidates: List[Persona] = []
 		has_strong_filters = bool(include_all) or bool(exclude)  # Есть ли жёсткие критерии
+		note: Optional[str] = None  # Пояснение для пользователя
 		
 		# 2) Если есть фильтры — ищем по тегам
 		if include_all or include_any or exclude:
@@ -291,17 +308,25 @@ class PersonaSearchService:
 					existing_ids.add(p.persona_id)
 		
 		# 4) Если по тегам 0 результатов — пробуем ослабить фильтры
-		# ВАЖНО: ослабляем только если совсем ничего не нашли, и возвращаем только профессию
+		# ВАЖНО: ослабляем только если совсем ничего не нашли
+		relaxed_filter: Optional[str] = None
 		if len(candidates) == 0 and has_strong_filters:
 			# Пробуем только профессию (без города) — это приоритет
 			if "profession" in include_all:
 				prof_only = {"profession": include_all["profession"]}
 				candidates = await self.search_by_filters(prof_only, include_any, exclude, title_like=None, limit=20)
+				if candidates and "city_name" in include_all:
+					# Ослабили по городу
+					city_name = include_all["city_name"][0]
+					relaxed_filter = f"город «{city_name}»"
 			
 			# Если профессии нет или по ней 0 — пробуем только город
 			if len(candidates) == 0 and "city_name" in include_all:
 				city_only = {"city_name": include_all["city_name"]}
 				candidates = await self.search_by_filters(city_only, include_any, exclude, title_like=None, limit=20)
+				if candidates and "profession" in include_all:
+					# Ослабили по профессии
+					relaxed_filter = "профессия"
 		
 		# 5) Если совсем ничего нет — пробуем LLM маппинг (только без жёстких фильтров)
 		if len(candidates) < 3 and not has_strong_filters:
@@ -330,14 +355,20 @@ class PersonaSearchService:
 						existing_ids.add(p.persona_id)
 		
 		if not candidates:
-			return []
+			return SearchResult(personas=[], note=None)
+		
+		# Формируем пояснение
+		if relaxed_filter:
+			note = f"⚠️ В базе нет точных совпадений. Показаны результаты без учёта: {relaxed_filter}."
 		
 		# 6) Реранжирование через LLM (ограничиваем top_k, чтобы не возвращать лишнее)
 		# Если по тегам нашли достаточно — ограничиваем количеством найденного
 		effective_top_k = min(top_k, len(candidates)) if has_strong_filters else top_k
 		ranked = await self._rerank_async(llm, query, candidates, top_k=effective_top_k)
-		await self._cache.set(key, ranked, ttl_s=1800.0)
-		return ranked
+		
+		result = SearchResult(personas=ranked, note=note)
+		await self._cache.set(key, result, ttl_s=1800.0)
+		return result
 	
 	async def _apply_exclude_filter(self, personas: List[Persona], exclude: Dict[str, List[str]]) -> List[Persona]:
 		"""Фильтрует персон по exclude-тегам."""
