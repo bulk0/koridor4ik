@@ -290,33 +290,18 @@ class PersonaSearchService:
 					candidates.append(p)
 					existing_ids.add(p.persona_id)
 		
-		# 4) Если по тегам мало результатов — пробуем ослабить фильтры
-		# Но только если есть жёсткие фильтры и они дали мало результатов
-		if len(candidates) < 3 and has_strong_filters:
-			# Пробуем убрать один из жёстких фильтров (приоритет: город -> профессия)
-			relaxed_candidates: List[Persona] = []
-			
-			# Сначала пробуем только профессию (без города)
+		# 4) Если по тегам 0 результатов — пробуем ослабить фильтры
+		# ВАЖНО: ослабляем только если совсем ничего не нашли, и возвращаем только профессию
+		if len(candidates) == 0 and has_strong_filters:
+			# Пробуем только профессию (без города) — это приоритет
 			if "profession" in include_all:
 				prof_only = {"profession": include_all["profession"]}
-				relaxed_candidates = await self.search_by_filters(prof_only, include_any, exclude, title_like=None, limit=50)
+				candidates = await self.search_by_filters(prof_only, include_any, exclude, title_like=None, limit=20)
 			
-			# Если всё ещё мало — пробуем только город
-			if len(relaxed_candidates) < 3 and "city_name" in include_all:
+			# Если профессии нет или по ней 0 — пробуем только город
+			if len(candidates) == 0 and "city_name" in include_all:
 				city_only = {"city_name": include_all["city_name"]}
-				city_hits = await self.search_by_filters(city_only, include_any, exclude, title_like=None, limit=50)
-				existing_ids = {p.persona_id for p in relaxed_candidates}
-				for p in city_hits:
-					if p.persona_id not in existing_ids:
-						relaxed_candidates.append(p)
-						existing_ids.add(p.persona_id)
-			
-			# Добавляем к кандидатам, помечая что это "ослабленный" поиск
-			existing_ids = {p.persona_id for p in candidates}
-			for p in relaxed_candidates:
-				if p.persona_id not in existing_ids:
-					candidates.append(p)
-					existing_ids.add(p.persona_id)
+				candidates = await self.search_by_filters(city_only, include_any, exclude, title_like=None, limit=20)
 		
 		# 5) Если совсем ничего нет — пробуем LLM маппинг (только без жёстких фильтров)
 		if len(candidates) < 3 and not has_strong_filters:

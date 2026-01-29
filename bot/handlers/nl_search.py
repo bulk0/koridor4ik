@@ -102,11 +102,12 @@ async def nl_query(message: Message, state: FSMContext) -> None:
 		if status:
 			await safe_edit(status, "Ищу кандидатов…")
 		# Новый быстрый поиск с параллельным LLM‑реранжом
-		personas = await _search.search_by_description_fast(query, llm, k_fts=40, top_k=12)
+		# top_k=15 — максимум результатов, но реально вернётся меньше если по тегам мало
+		personas = await _search.search_by_description_fast(query, llm, k_fts=40, top_k=15)
 		if not personas:
 			if status:
 				await safe_edit(status, "Пробую умный поиск по смыслу…")
-			personas = await _search.search_by_description(query, llm, k_fts=50, top_k=15)
+			personas = await _search.search_by_description(query, llm, k_fts=50, top_k=10)
 	finally:
 		stop.set()
 		await typing_task
