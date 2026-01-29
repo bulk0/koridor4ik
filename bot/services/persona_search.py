@@ -290,15 +290,42 @@ class PersonaSearchService:
 					candidates.append(p)
 					existing_ids.add(p.persona_id)
 		
-		# 4) Если всё ещё мало — пробуем LLM маппинг
-		if len(candidates) < 3:
+		# 4) Если по тегам мало результатов — пробуем ослабить фильтры
+		# Но только если есть жёсткие фильтры и они дали мало результатов
+		if len(candidates) < 3 and has_strong_filters:
+			# Пробуем убрать один из жёстких фильтров (приоритет: город -> профессия)
+			relaxed_candidates: List[Persona] = []
+			
+			# Сначала пробуем только профессию (без города)
+			if "profession" in include_all:
+				prof_only = {"profession": include_all["profession"]}
+				relaxed_candidates = await self.search_by_filters(prof_only, include_any, exclude, title_like=None, limit=50)
+			
+			# Если всё ещё мало — пробуем только город
+			if len(relaxed_candidates) < 3 and "city_name" in include_all:
+				city_only = {"city_name": include_all["city_name"]}
+				city_hits = await self.search_by_filters(city_only, include_any, exclude, title_like=None, limit=50)
+				existing_ids = {p.persona_id for p in relaxed_candidates}
+				for p in city_hits:
+					if p.persona_id not in existing_ids:
+						relaxed_candidates.append(p)
+						existing_ids.add(p.persona_id)
+			
+			# Добавляем к кандидатам, помечая что это "ослабленный" поиск
+			existing_ids = {p.persona_id for p in candidates}
+			for p in relaxed_candidates:
+				if p.persona_id not in existing_ids:
+					candidates.append(p)
+					existing_ids.add(p.persona_id)
+		
+		# 5) Если совсем ничего нет — пробуем LLM маппинг (только без жёстких фильтров)
+		if len(candidates) < 3 and not has_strong_filters:
 			mapped = await self._llm_map_description_to_filters_async(llm, query)
 			llm_include_any: Dict[str, List[str]] = {}
 			for cat, vals in (mapped.get("tags") or {}).items():
 				llm_include_any[str(cat)] = [str(v) for v in vals]
 			
 			if llm_include_any:
-				# Объединяем с нашими exclude
 				llm_hits = await self.search_by_filters({}, llm_include_any, exclude, title_like=None, limit=50)
 				existing_ids = {p.persona_id for p in candidates}
 				for p in llm_hits:
@@ -306,22 +333,21 @@ class PersonaSearchService:
 						candidates.append(p)
 						existing_ids.add(p.persona_id)
 			
-			# FTS по альтернативным запросам (только если нет жёстких фильтров)
-			if not has_strong_filters:
-				for alt in (mapped.get("alt_queries") or [])[:3]:
-					alt_hits = await self.fts_candidates(alt, k=20)
-					if exclude:
-						alt_hits = await self._apply_exclude_filter(alt_hits, exclude)
-					existing_ids = {p.persona_id for p in candidates}
-					for p in alt_hits:
-						if p.persona_id not in existing_ids:
-							candidates.append(p)
-							existing_ids.add(p.persona_id)
+			# FTS по альтернативным запросам
+			for alt in (mapped.get("alt_queries") or [])[:3]:
+				alt_hits = await self.fts_candidates(alt, k=20)
+				if exclude:
+					alt_hits = await self._apply_exclude_filter(alt_hits, exclude)
+				existing_ids = {p.persona_id for p in candidates}
+				for p in alt_hits:
+					if p.persona_id not in existing_ids:
+						candidates.append(p)
+						existing_ids.add(p.persona_id)
 		
 		if not candidates:
 			return []
 		
-		# 5) Реранжирование через LLM (ограничиваем top_k, чтобы не возвращать лишнее)
+		# 6) Реранжирование через LLM (ограничиваем top_k, чтобы не возвращать лишнее)
 		# Если по тегам нашли достаточно — ограничиваем количеством найденного
 		effective_top_k = min(top_k, len(candidates)) if has_strong_filters else top_k
 		ranked = await self._rerank_async(llm, query, candidates, top_k=effective_top_k)
